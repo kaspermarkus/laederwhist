@@ -16,6 +16,7 @@
         <li id="betTab" class="tab"><font>melding</font></li>
         <li id="scoresTab" class="tab"><font>scores</font></li>
         <li id="statisticsTab" class="tab"><font>statistik</font></li>
+        <li id="skyldeposenTab" class="tab"><font>skyldeposen</font></li>
       </ul>
     </div>
     <div id="headerPling">
@@ -26,7 +27,7 @@
         </div>
       </div>
     </div>
-    <div id="bettingScreen">
+    <div id="bettingScreen" class="screen">
       <div id="whiteShadeContainer">
         <div id="darkShadeContainer">
           <div id="outerContainer">
@@ -110,13 +111,13 @@
         </div>
       </div>
     </div>
-    <div id="scoreTableScreen">
+    <div id="scoreTableScreen" class="screen">
       <div id="scoreGraphContainer"><div id="scoreGraph"></div></div>
       <div id="scoreTableContainer">
         <table id="scoreTable" class="striped"></table>
       </div>
     </div>
-    <div id="sessionControlScreen">
+    <div id="sessionControlScreen" class="screen">
       <div id="sessionChooserContainer">vælg andet spil: 
         <select id="sessionChooser"></select>
       </div>
@@ -130,7 +131,7 @@
       </div>
     </div>
    <script type="text/javascript" src="laederwhist.js"></script>
-   <div id="statisticsScreen">
+   <div id="statisticsScreen" class="screen">
       <div id="statisticsControlContainer"> 
         vælg aften: <select id="statisticsGameSelect"></select>
         vælg spiller: <select id="statisticsPlayerSelect"></select>
@@ -139,6 +140,15 @@
     <table id="gametypeStatisticsTable"></table>
     <div id="summaryGraphsArea"></div>
    </div>
+
+    <div id="skyldeposenScreen" class="screen">
+      <div id="skyldeposenSummary"></div>
+
+      <div id="skyldeposenTableContainer">
+        <table id="skyldeposenTable" class="striped"></table>
+      </div>
+    </div>
+
    <script>
    setupUI();
    </script>

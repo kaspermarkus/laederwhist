@@ -441,39 +441,40 @@ var setupUI = function () {
     $("#betTab").click(showBettingScreen);
     $("#sessionControlTab").click(showSessionControlScreen);
     $("#statisticsTab").click(showStatisticsScreen);
+    $("#skyldeposenTab").click(showSkyldeposenScreen);
     showSessionControlScreen();
     updateScoreTable();
     $("#vipTable").css('visibility','hidden');
 };
 
+var showScreen = function (screen, tab) {
+    $(".screen").hide()
+    $("#"+screen).show();
+    $(".tab").removeClass("selected");
+    $("#"+tab).addClass("selected");
+};
+
 var showScoreTableScreen = function () {
-    $("#scoreTableScreen").show();
-    $("#bettingScreen, #sessionControlScreen, #statisticsScreen").hide()
-    $("#scoresTab").addClass("selected");
-    $("#betTab, #sessionControlTab, #statisticsTab").removeClass("selected");
+    showScreen("scoreTableScreen", "scoresTab");
     drawScoreGraph(graphData.data, graphData.min, graphData.max);
-}
+};
 
 var showBettingScreen = function () {
-    $("#bettingScreen").show()
-    $("#scoreTableScreen, #sessionControlScreen, #statisticsScreen").hide();
-    $("#betTab").addClass("selected");
-    $("#scoresTab, #sessionControlTab, #statisticsTab").removeClass("selected");
+    showScreen("bettingScreen", "betTab");
 }
 
 var showSessionControlScreen = function () {
-    $("#sessionControlScreen").show()
-    $("#scoreTableScreen, #bettingScreen, #statisticsScreen").hide();
-    $("#sessionControlTab").addClass("selected");
-    $("#scoresTab, #betTab, #statisticsTab").removeClass("selected");    
+    showScreen("sessionControlScreen", "sessionControlTab");
 };
 
 var showStatisticsScreen = function () {
-    $("#statisticsScreen").show()
-    $("#scoreTableScreen, #bettingScreen, #sessionControlScreen").hide();
-    $("#statisticsTab").addClass("selected");
-    $("#scoresTab, #betTab, #sessionControlTab").removeClass("selected");
+    showScreen("statisticsScreen", "statisticsTab");
     updateStatistics(whist);
+};
+
+var showSkyldeposenScreen = function () {
+    updateSkyldeposen();
+    showScreen("skyldeposenScreen", "skyldeposenTab")
 };
 
 var setupSessionChooserScreen = function () {
@@ -648,7 +649,63 @@ var drawScoreGraph = function (data, min, max) {
 };
 
 
+/******************************************************
+ * Skyldeposen screen functions 
+ */
 
+ var updateSkyldeposen = function () {
+    var tbl = $("#skyldeposenTable");
+    tbl.html("");
+    var totals = {};
+    var sumTotal = 0;
+    //create headers with names:
+    var tr = $("<tr></tr>").addClass("playerNames");   
+    tr.append("<th>Spil</th>");
+
+    var firstRow = $("<tr></tr>").append("<th class='betHeader'>Regnskab start</th>"); 
+    var newRow = $("<tr></tr>").append("<th>a</th>");
+    
+    $.each(players, function (k, v) {
+        tr.append("<th>"+v+"</th>");
+        newRow.append("<td></td>");
+        firstRow.append("<td>0</td>");
+        totals[v] = 0;
+    });
+    tbl.append(tr);
+    tbl.append(firstRow);
+    
+    $.each(whist.sessions, function (k, session) {
+        var row = $("<tr></tr>");
+        row.append("<th class='betHeader'>"+session.name+"</th>");
+        
+        var finalIndex = session.games.length - 1;
+        var finalScores = session.games[finalIndex].totals;
+            
+        $.each(players, function (k, player) {
+            var finalScore = finalScores[player];
+            if (finalScore < 0) {
+                row.append("<td>"+finalScore+"</td>");
+                totals[player] += finalScore;
+                sumTotal += finalScore;
+            } else {
+                row.append("<td></td>");
+            }
+        });
+
+        tbl.append(row);
+    });
+
+    var row = $("<tr></tr>");
+    row.append("<th class='betHeader'>I alt</th>");
+    //write out totals
+    $.each(players, function (k, player) {
+        row.append("<th>"+totals[player]+"</th>");
+    });
+
+    tbl.append(row);
+
+    $("#skyldeposenSummary").text((-sumTotal)+" kr.");
+}
 
 
 

@@ -477,3 +477,61 @@ div#statisticsControlContainer {
 	float: right;
 	margin-right: 100px;
 }
+
+/* Skyldeposen screen */
+div#skyldeposenScreen {
+	width: 806px;
+	min-height: 300px;
+	border: 2px solid #d2dbc8;
+	border-top: 0px;
+	background-color: #696b65;
+	margin: 0px auto;
+	padding-top: 20px;	
+}
+
+div#skyldeposenTableContainer {
+	min-height: 300px;
+	border: 4px solid #595a56;
+	border-top: 0px;
+	padding-top: 30px;
+	padding-bottom: 40px;
+    text-align: center;
+}
+
+
+#skyldeposenTableContainer table {
+	margin-left:auto; 
+    margin-right:auto;
+    min-width: 600px;
+}
+
+#skyldeposenTableContainer td {
+	color: #d2dbc8;
+	border-left: 1px solid #d2dbc8;
+	border-right: 1px;
+}
+
+#skyldeposenTableContainer .betHeader {
+	text-align: left;
+}
+
+div#skyldeposenTableContainer .looser {
+	color: #F99;
+}
+
+div#skyldeposenSummary {
+	background-color: #595a56;
+	width: 350px;
+	min-height: 140px;
+	border: 2px solid #d2dbc8;
+	/*background-color: #696b65;*/
+	margin: 0px auto;
+	padding-top: 30px;
+	padding-bottom: 15px;
+	/*vertical-align: middle;*/
+	text-align: center;
+	font-size: 100px;
+	color: #F77;
+	font-weight: bolder;
+}
+
