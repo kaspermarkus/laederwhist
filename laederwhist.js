@@ -452,6 +452,7 @@ var showScreen = function (screen, tab) {
     $("#"+screen).show();
     $(".tab").removeClass("selected");
     $("#"+tab).addClass("selected");
+    $("#activePlayers").hide();
 };
 
 var showScoreTableScreen = function () {
@@ -461,6 +462,7 @@ var showScoreTableScreen = function () {
 
 var showBettingScreen = function () {
     showScreen("bettingScreen", "betTab");
+    $("#activePlayers").show();
 }
 
 var showSessionControlScreen = function () {
@@ -501,20 +503,21 @@ var setupStatisticsControlScreen = function () {
     $.each(whist.sessions, function (k, v) {
         select.append("<option value='"+k+"'>"+v.ppDate+": "+v.name+"</option>");
     });
-    select.change(function (v) {
-        ($(v.target).val() == "default") ? updateStatistics(whist) : singleGameStatistics($(v.target).val());
-        $("#statisticsPlayerSelect").val("default");
-    });
+    select.change(trimGamesForStatistics);
 
-    select = $("#statisticsPlayerSelect");
+    select = $("#statisticsPlayerSelect1");
     select.append("<option value='default'>alle spillere</option>");
     $.each(whist.players, function (k, v) {
         select.append("<option value='"+k+"'>"+v+"</option>");
     });
-    select.change(function (v) {
-        ($(v.target).val() == "default") ? updateStatistics(whist) : singlePlayerStatistics($(v.target).val());
-        $("#statisticsGameSelect").val("default");
-    });   
+    select.change(trimGamesForStatistics);
+
+    select = $("#statisticsPlayerSelect2");
+    select.append("<option value='default'>alle spillere</option>");
+    $.each(whist.players, function (k, v) {
+        select.append("<option value='"+k+"'>"+v+"</option>");
+    });
+    select.change(trimGamesForStatistics);
 };
 
 var updateScoreTable = function () {
@@ -529,30 +532,39 @@ var updateScoreTable = function () {
     var totals = {};
     var round, td;
     //create headers with names:
-    var tr = $("<tr></tr>").addClass("playerNames");   
+    var headerRow = $("<tr></tr>").addClass("playerNames");   
     var firstRow = $("<tr></tr>").append("<th class='betHeader'>Spil start</th>"); 
     var newRow = $("<tr></tr>").append("<th>a</th>");
-    tr.append("<th>melding</th>");
+    headerRow.append("<th>melding</th>");
+    var sessionPlayers = [];
     $.each(players, function (k, v) {
-        tr.append("<th>"+v+"</th>");
+        for (var i=0; i<session.games.length; i++) {
+            if (session.games[i].results[v]) {
+                sessionPlayers.push(v);
+                break;
+            }
+        }
+    });
+    $.each(sessionPlayers, function (k, v) {
+        headerRow.append("<th>"+v+"</th>");
         newRow.append("<td></td>");
         firstRow.append("<td>0</td>");
         indices[v]= k+2;
         totals[v] = 0;
         graphData.data[v] = [[0,0]];
     });
-    tbl.append(tr);
-    tbl.append(firstRow);
+    $(firstRow).prependTo(tbl,"tr:first");
+
     for (var i=0; i<session.games.length; i++) {
         round = session.games[i];        
         round.totals = {};
         
         //copy new row:
-        tr = $("<tr>"+newRow.html()+"</tr>").data(round).addClass("round"+i);
+        var tr = $("<tr>"+newRow.html()+"</tr>").data(round).addClass("round"+i);
         $("th", tr).text("runde "+(i+1)+": "+round.betName).addClass("betHeader");
 
         var activePlayers = round.activePlayers;
-        $.each(players, function (k, v) {            
+        $.each(sessionPlayers, function (k, v) {            
             var score =  round.results[v];
             //add to totals:
             totals[v] = totals[v]+(score?score:0);
@@ -571,8 +583,9 @@ var updateScoreTable = function () {
             printScores("totals", v, indices);
         });
         
-        tbl.append(tr);
+        $(tr).prependTo(tbl, "tr:first");
     }
+    $(headerRow).prependTo(tbl,"tr:first");
 }
 
 
@@ -733,18 +746,41 @@ S
 *
 */
 
-var singleGameStatistics = function (session_id) {
-    var singleGameWhist = $.extend(true, {}, whist);
-    singleGameWhist.sessions = {};
-    singleGameWhist.sessions[session_id] = whist.sessions[session_id];
-    updateStatistics(singleGameWhist);
+var trimGamesForStatistics = function () {
+    var games = $.extend(true, {}, whist); //all games
+    var session_id = $("#statisticsGameSelect").val(); //prune based on session ID
+    if (session_id !== "default") {
+        games = pruneToSingleGame(games, session_id);
+    }
+    var player1 = $("#statisticsPlayerSelect1").val();
+    var player2 = $("#statisticsPlayerSelect2").val();
+    if (player1 === "default" && player2 === "default") {
+        //do nothing
+    } else if (player1 !== "default" && player2 !== "default" && player1 !== player2) {
+        games = pruneToTeam(games, player1, player2);
+    } else if (player1 !== "default") {
+        games = pruneToSinglePlayer(games, player1);
+    } else {
+        games = pruneToSinglePlayer(games, player2);
+    }
+    updateStatistics(games);
 }
 
-var singlePlayerStatistics = function (playerind) {
-    var playername = whist.players[playerind];
-    var singlePlayerWhist = $.extend(true, {}, whist);
-    singlePlayerWhist.sessions = {};
-    $.each(whist.sessions, function (session_id, session) {
+var pruneToSingleGame = function (games, session_id) {
+    var pruned_games = {
+        sessions: {}
+    };
+    pruned_games.sessions[session_id] = games.sessions[session_id];
+    games.sessions = pruned_games.sessions;
+    return games;
+}
+
+var pruneToSinglePlayer = function (games, playerind) {
+    var playername = games.players[playerind];
+    var pruned_games = {
+        sessions: {}
+    };
+    $.each(games.sessions, function (session_id, session) {
         var newSession = {};
         $.each(session.games, function (ind, game) {
             if (game.better == playername) {
@@ -755,10 +791,34 @@ var singlePlayerStatistics = function (playerind) {
             }
         });
         if (!$.isEmptyObject(newSession)) {
-            singlePlayerWhist.sessions[session_id] = newSession;
+            pruned_games.sessions[session_id] = newSession;
         }
     });
-    updateStatistics(singlePlayerWhist);
+    return pruned_games;
+}
+
+var pruneToTeam = function (games, playerind1, playerind2) {
+    var playername1 = games.players[playerind1];
+    var playername2 = games.players[playerind2];
+    var pruned_games = {
+        sessions: {}
+    };
+    $.each(games.sessions, function (session_id, session) {
+        var newSession = {};
+        $.each(session.games, function (ind, game) {
+            if (game.better == playername1 && game.partner == playername2 ||
+                game.better == playername2 && game.partner == playername1) {
+                if (!newSession.games) {
+                    newSession.games = [];
+                }
+                newSession.games.push(game);
+            }
+        });
+        if (!$.isEmptyObject(newSession)) {
+            pruned_games.sessions[session_id] = newSession;
+        }
+    });
+    return pruned_games;
 }
 
 var updateStatistics = function (whist) {
@@ -911,10 +971,10 @@ var drawGameTypeRow = function (obj, header, cssclass) {
     var tr = $("<tr></tr>").addClass((cssclass)?cssclass:"")
         .append("<th>"+header+"</th>")
         .append("<td>"+obj.numRounds+"<br />("+getPercent(obj.numRounds, obj.numRounds)+"%)</td>")
-        .append("<td>"+obj.numWon+"<br />("+getPercent(obj.numWon, obj.numRounds)+"</td>")
-        .append("<td>"+obj.numLost+"<br />("+getPercent(obj.numLost, obj.numRounds)+"</td>")
-        .append("<td>"+(obj.winnings.sumPos/obj.numWon).toFixed(2)+" kr<br />("+(obj.stikDiffs.sumPos/obj.numWon).toFixed(2)+")</td>")
-        .append("<td>"+(obj.winnings.sumNeg/obj.numLost).toFixed(2)+" kr<br />("+(obj.stikDiffs.sumNeg/obj.numLost).toFixed(2)+")</td>")
+        .append("<td>"+obj.numWon+"<br />("+getPercent(obj.numWon, obj.numRounds)+"%)</td>")
+        .append("<td>"+obj.numLost+"<br />("+getPercent(obj.numLost, obj.numRounds)+"%)</td>")
+        .append("<td>"+(obj.winnings.sumPos/obj.numWon).toFixed(2)+" kr<br />("+(obj.stikDiffs.sumPos/obj.numWon).toFixed(0)+" stik)</td>")
+        .append("<td>"+(obj.winnings.sumNeg/obj.numLost).toFixed(2)+" kr<br />("+(obj.stikDiffs.sumNeg/obj.numLost).toFixed(0)+" stik)</td>")
         .append("<td>"+obj.winnings.max+" / "+(obj.winnings.sum/obj.numRounds).toFixed(2)+" / "+obj.winnings.min+"</td>")
         .append("<td>"+obj.stikDiffs.max+" / "+(obj.stikDiffs.sum/obj.numRounds).toFixed(2)+" / "+obj.stikDiffs.min+"</td>");
     return tr;   
