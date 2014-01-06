@@ -603,12 +603,11 @@ var printScores = function (field, v, indices, extraClass) {
         if (score > 0) colorClass = "winner";
         if (score < 0) colorClass = "looser";
           
-        var td = $("td:nth-child("+indices[val]+")", tr).html(score).removeClass().addClass(colorClass);
+        var td = $("td:nth-child("+indices[val]+")", tr).removeClass().addClass(colorClass);
         if (extraClass)
             td.addClass(extraClass);
-        if (val == round.better) { //bold if better
-            td.addClass("bold");
-        }
+        //mark with spade symbol the person who did the bet
+        td.html((val == round.better ? "&spades; " : "&nbsp;&nbsp;&nbsp;") + score);
     });
 
 };
