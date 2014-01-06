@@ -697,9 +697,11 @@ var drawScoreGraph = function (data, min, max) {
         $.each(players, function (k, player) {
             var finalScore = finalScores[player];
             if (finalScore < 0) {
-                row.append("<td>"+finalScore+"</td>");
+                row.append("<td class='looser'>"+finalScore+"</td>");
                 totals[player] += finalScore;
                 sumTotal += finalScore;
+            } else if (finalScore > 0) {
+                row.append("<td>x</td>");
             } else {
                 row.append("<td></td>");
             }
