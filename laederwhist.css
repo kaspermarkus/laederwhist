@@ -38,7 +38,7 @@ div.tabs {
 }
 
 .tabs li.selected,  .tabs li.selected font {
-	background-color: #363921;	
+	background-color: #363921;
 	color: #d2dbc8;
 }
 
@@ -70,13 +70,13 @@ div.headerContainer {
 
 div.headerContainer h1 {
 	font-weight: bolder;
-	font-size: 40px;	
+	font-size: 40px;
 	color: #d2dbc8;
 }
 
-div.headerContainer table { 
+div.headerContainer table {
 	border-collapse:collapse;
-	margin-left:auto; 
+	margin-left:auto;
     margin-right:auto;
     font-size: 12px;
 	border: hidden;
@@ -138,7 +138,7 @@ th {
 	padding:5px;
 	background-color: #595a56;
 	border:1px solid #d2dbc8;
-} 
+}
 
 td {
 	color: #e2ebd8;
@@ -184,9 +184,9 @@ td.selected, .betArea td.selected, .verticalStriped td.selected:nth-of-type(even
 }
 
 
-/* 
+/*
 *
-Results area 
+Results area
 *
 */
 
@@ -297,7 +297,7 @@ div#outerContainer {
 div#outerContainertable {
 	border-collapse:collapse;
 	margin-bottom:15px;
-	margin-left:auto; 
+	margin-left:auto;
     margin-right:auto;
 	/*width:90%;*/
 }
@@ -314,11 +314,11 @@ div#scoreTableScreen {
 	border-top: 0px;
 	background-color: #696b65;
 	margin: 0px auto;
-	padding-top: 20px;	
+	padding-top: 20px;
 }
 
 div#scoreGraphContainer {
-	margin: 0px auto;	
+	margin: 0px auto;
 	min-height: 200px;
 	width: 750px;
 	padding: 10px 4px 0px 0px;
@@ -341,7 +341,7 @@ div#scoreTableContainer {
 
 
 #scoreTableContainer table {
-	margin-left:auto; 
+	margin-left:auto;
     margin-right:auto;
     min-width: 600px;
 }
@@ -374,11 +374,11 @@ div#sessionControlScreen {
 	border-top: 0px;
 	background-color: #696b65;
 	margin: 0px auto;
-	padding-top: 0px;	
+	padding-top: 0px;
 }
 
 div#sessionChooserContainer {
-	margin: 0px auto;	
+	margin: 0px auto;
 	/*min-height: 200px;
 	*/padding: 10px 0px 10px 0px;
 	background-color: #d2dbc8;
@@ -412,13 +412,13 @@ div#statisticsScreen {
 	border-top: 0px;
 	background-color: #696b65;
 	margin: 0px auto;
-	padding-top: 0px;	
+	padding-top: 0px;
 	margin-bottom: 30px;
 	text-align: center;
 }
 
 div#statisticsControlContainer {
-	margin: 0px auto;	
+	margin: 0px auto;
 	margin-top: 0px;
 	margin-bottom: 20px;
 	/*min-height: 200px;
@@ -486,7 +486,7 @@ div#skyldeposenScreen {
 	border-top: 0px;
 	background-color: #696b65;
 	margin: 0px auto;
-	padding-top: 20px;	
+	padding-top: 20px;
 }
 
 div#skyldeposenTableContainer {
@@ -500,7 +500,7 @@ div#skyldeposenTableContainer {
 
 
 #skyldeposenTableContainer table {
-	margin-left:auto; 
+	margin-left:auto;
     margin-right:auto;
     min-width: 600px;
 }

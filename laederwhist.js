@@ -94,8 +94,8 @@ var calculateScores = function () {
            $.inArray(currentRound.better, currentRound.activePlayers) == -1 ||
            !currentRound.type ||
            !currentRound.stikCost ||
-           (currentRound.type == "vip" && !currentRound.numVip)) { 
-        //Not everything needed is here so disable submit button and stop calculating       
+           (currentRound.type == "vip" && !currentRound.numVip)) {
+        //Not everything needed is here so disable submit button and stop calculating
         $("#submitRound").attr('disabled', 'disabled');
         return;
     }
@@ -106,8 +106,8 @@ var calculateScores = function () {
             //calculate from the perspective of the better/partner
             var diff = currentRound.stikWon - currentRound.stik;
             currentRound.diff = (diff >= 0) ? diff + 1 : diff;
-            var amount = currentRound.stikCost * currentRound.diff; 
-               
+            var amount = currentRound.stikCost * currentRound.diff;
+
             if (!currentRound.partner || currentRound.partner == currentRound.better) { //if selvmakker:
                 assignScores(amount, [currentRound.better]);
             } else { //ikke selvmakker
@@ -119,7 +119,7 @@ var calculateScores = function () {
         }
     } else { //we are dealing with a nolo game
         //check that we have everything we need:
-        if (currentRound.solWon && currentRound.solWon.better != undefined && 
+        if (currentRound.solWon && currentRound.solWon.better != undefined &&
             (currentRound.partner == undefined || (currentRound.solWon.partner != undefined))) {
             //if only one player called sol:
             if (currentRound.partner == undefined || currentRound.better == currentRound.partner) {
@@ -164,7 +164,7 @@ var getBetName = function (round) {
     }
 };
 
-var updateBetSummary = function () {    
+var updateBetSummary = function () {
     if (!currentRound.type) {
         $("#betSummary #bet").text("ingen melding valgt");
         $("#betSummary #cost").text("0 kr");
@@ -245,7 +245,7 @@ var createBetTable = function () {
 };
 
 var setupActivePlayersTable = function () {
-    //Draw table    
+    //Draw table
     var table = $("table#activePlayers tr");
 
     for (var i=0; i<players.length; i++) {
@@ -266,7 +266,7 @@ var setupActivePlayersTable = function () {
             currentRound.activePlayers = jQuery.grep(currentRound.activePlayers, function(value) {
                 return value != el.text();
             });
-        } else if (currentRound.activePlayers.length < 4) { //if unselected and room for more players                
+        } else if (currentRound.activePlayers.length < 4) { //if unselected and room for more players
             el.addClass("selected");
             currentRound.activePlayers.push(el.text());
         }
@@ -325,7 +325,7 @@ var addSolListeners = function () {
         markBet(undefined, type, v);
     });
     $("#solWon td").click(function (v) {
-        if (!currentRound.solWon) 
+        if (!currentRound.solWon)
             currentRound.solWon = {};
         var val = (v.target.cellIndex == 1);
         var row = v.target.parentElement.rowIndex;
@@ -347,7 +347,7 @@ var addVipListener = function () {
 var addStikWonListener = function () {
     addRadioCellListener("#stikWonTable td", function (v, el) {
         currentRound.stikWon = parseInt(el.text());
-        updateBetSummary();       
+        updateBetSummary();
     });
 };
 
@@ -371,14 +371,14 @@ var submitRound = function () {
     currentRound = { activePlayers: currentRound.activePlayers };
     //remove everything selected:
     $("#outerContainer .selected, #resultContainer .selected").removeClass("selected");
-    
+
     updateBetSummary();
     calculateScores();
     updateScoreTable();
     showScoreTableScreen();
 
     //save to file via php script
-    jQuery.post("laeder_remote.php", 
+    jQuery.post("laeder_remote.php",
         JSON.stringify(whist),
         function (a, b, c) {
             console.log(b);
@@ -398,7 +398,7 @@ var initWhist = function () {
          async: false,
          cache: false
 
-    }); 
+    });
 
     players = whist.players;
     var match = window.location.search.match(/\?sessionID=(.*)$/);
@@ -532,8 +532,8 @@ var updateScoreTable = function () {
     var totals = {};
     var round, td;
     //create headers with names:
-    var headerRow = $("<tr></tr>").addClass("playerNames");   
-    var firstRow = $("<tr></tr>").append("<th class='betHeader'>Spil start</th>"); 
+    var headerRow = $("<tr></tr>").addClass("playerNames");
+    var firstRow = $("<tr></tr>").append("<th class='betHeader'>Spil start</th>");
     var newRow = $("<tr></tr>").append("<th>a</th>");
     headerRow.append("<th>melding</th>");
     var sessionPlayers = [];
@@ -556,19 +556,19 @@ var updateScoreTable = function () {
     $(firstRow).prependTo(tbl,"tr:first");
 
     for (var i=0; i<session.games.length; i++) {
-        round = session.games[i];        
+        round = session.games[i];
         round.totals = {};
-        
+
         //copy new row:
         var tr = $("<tr>"+newRow.html()+"</tr>").data(round).addClass("round"+i);
         $("th", tr).text("runde "+(i+1)+": "+round.betName).addClass("betHeader");
 
         var activePlayers = round.activePlayers;
-        $.each(sessionPlayers, function (k, v) {            
+        $.each(sessionPlayers, function (k, v) {
             var score =  round.results[v];
             //add to totals:
             totals[v] = totals[v]+(score?score:0);
-            round.totals[v] = totals[v];  
+            round.totals[v] = totals[v];
 
             //save graph info
             graphData.data[v].push([i+1, totals[v]])
@@ -582,7 +582,7 @@ var updateScoreTable = function () {
         }).mouseleave(function (v) {
             printScores("totals", v, indices);
         });
-        
+
         $(tr).prependTo(tbl, "tr:first");
     }
     $(headerRow).prependTo(tbl,"tr:first");
@@ -602,12 +602,17 @@ var printScores = function (field, v, indices, extraClass) {
         var colorClass = "neutral";
         if (score > 0) colorClass = "winner";
         if (score < 0) colorClass = "looser";
-          
+
         var td = $("td:nth-child("+indices[val]+")", tr).removeClass().addClass(colorClass);
         if (extraClass)
             td.addClass(extraClass);
         //mark with spade symbol the person who did the bet
-        td.html((val == round.better ? "&spades; " : "&nbsp;&nbsp;&nbsp;") + score);
+        var html = (val == round.better ? "&spades; " : "&nbsp;&nbsp;&nbsp;");
+        html += score;
+        html += "&nbsp;&nbsp;&nbsp;<b><span class=\"indicator-dot " + ((round["results"][val] > 0) ? "winner" : "looser")
+             + "\">&bull;</span></b>";
+
+        td.html(html);
     });
 
 };
@@ -620,9 +625,9 @@ var test = function (a) {
         str += "<br />Stik vundet: "+round.stikWon+" <font class='"+((round.diff<0)?"looser":"winner")+"'>("+(round.stikWon-round.stik)+")</font>";
     }
     $.each(round.results, function (k, v) {
-        var classstr = "";        
+        var classstr = "";
         if (v < 0) classstr="looser";
-        if (v > 0) classstr="winner";      
+        if (v > 0) classstr="winner";
         str += "<br /><font class='"+classstr+"'>"+k+": "+v+" kr.</font>";
     });
     return str+"</small>";
@@ -637,7 +642,7 @@ var drawScoreGraph = function (data, min, max) {
         arr.push({data: v, label: k, points : { show : true }, lines: { show: true }});
     });
 
-    graph = Flotr.draw(container, arr, 
+    graph = Flotr.draw(container, arr,
         {
             HtmlText: false,
             xaxis: {
@@ -662,7 +667,7 @@ var drawScoreGraph = function (data, min, max) {
 
 
 /******************************************************
- * Skyldeposen screen functions 
+ * Skyldeposen screen functions
  */
 
  var updateSkyldeposen = function () {
@@ -671,12 +676,12 @@ var drawScoreGraph = function (data, min, max) {
     var totals = {};
     var sumTotal = 0;
     //create headers with names:
-    var tr = $("<tr></tr>").addClass("playerNames");   
+    var tr = $("<tr></tr>").addClass("playerNames");
     tr.append("<th>Spil</th>");
 
-    var firstRow = $("<tr></tr>").append("<th class='betHeader'>Regnskab start</th>"); 
+    var firstRow = $("<tr></tr>").append("<th class='betHeader'>Regnskab start</th>");
     var newRow = $("<tr></tr>").append("<th>a</th>");
-    
+
     $.each(players, function (k, v) {
         tr.append("<th>"+v+"</th>");
         newRow.append("<td></td>");
@@ -685,14 +690,14 @@ var drawScoreGraph = function (data, min, max) {
     });
     tbl.append(tr);
     tbl.append(firstRow);
-    
+
     $.each(whist.sessions, function (k, session) {
         var row = $("<tr></tr>");
         row.append("<th class='betHeader'>"+session.name+"</th>");
-        
+
         var finalIndex = session.games.length - 1;
         var finalScores = session.games[finalIndex].totals;
-            
+
         $.each(players, function (k, player) {
             var finalScore = finalScores[player];
             if (finalScore < 0) {
@@ -829,7 +834,7 @@ var updateStatistics = function (whist) {
     var ordered = [];
     $.each(gamestats.gametypes, function (k, v) {
         ordered.push(k);
-    });  
+    });
     ordered.sort(function (a, b) { return ordering[a] - ordering[b]; });
 
     drawGameTypeGraph(gamestats, ordered);
@@ -838,7 +843,7 @@ var updateStatistics = function (whist) {
 
 }
 var collectStatistics = function (whist) {
-    var gamestats = { 
+    var gamestats = {
         gametypes: {},
         numRounds: 0,
         numWon: 0,
@@ -854,7 +859,7 @@ var collectStatistics = function (whist) {
             sum: 0,
             sumPos: 0,
             sumNeg: 0
-        },          
+        },
         stikDiffs: {
             raw: [],
             max: 0,
@@ -917,7 +922,7 @@ var collectGameTypeStats = function (gametypestats, game) {
                 sum: 0,
                 sumPos: 0,
                 sumNeg: 0
-            },          
+            },
             stikDiffs: {
                 raw: [],
                 max: 0,
@@ -928,7 +933,7 @@ var collectGameTypeStats = function (gametypestats, game) {
             },
             selvmakker: 0,
             selvmakkerWins: 0
-        };                
+        };
     }
     //update gamestats based on entry
     var currentEntry = gametypestats[game.betName];
@@ -947,7 +952,7 @@ var collectGameTypeStats = function (gametypestats, game) {
     }
     currentEntry.winnings.raw.push(betterWinAmount);
     if (!isNolo(game.type)) {
-        
+
         //fix stik diff calculations
         currentEntry.stikDiffs.raw.push(game.diff);
         currentEntry.stikDiffs.sum += game.diff;
@@ -978,7 +983,7 @@ var drawGameTypeRow = function (obj, header, cssclass) {
         .append("<td>"+(obj.winnings.sumNeg/obj.numLost).toFixed(2)+" kr<br />("+(obj.stikDiffs.sumNeg/obj.numLost).toFixed(0)+" stik)</td>")
         .append("<td>"+obj.winnings.max+" / "+(obj.winnings.sum/obj.numRounds).toFixed(2)+" / "+obj.winnings.min+"</td>")
         .append("<td>"+obj.stikDiffs.max+" / "+(obj.stikDiffs.sum/obj.numRounds).toFixed(2)+" / "+obj.stikDiffs.min+"</td>");
-    return tr;   
+    return tr;
 }
 
 var drawGameTypeTable = function (gamestats, ordered) {
@@ -999,14 +1004,14 @@ var drawGameTypeTable = function (gamestats, ordered) {
         table.append(drawGameTypeRow(type, ordered[i]));
     };
     table.append(drawGameTypeRow(gamestats, "I alt", "summary"));
-};       
+};
 
 var getPercent = function (num, sum) {
     return (100*num/sum).toFixed(2);
 }
 
 var drawGameTypeGraph = function (gamestats, ordered) {
-    var graph = $("#gametypeStatisticsGraph").addClass("graph");    
+    var graph = $("#gametypeStatisticsGraph").addClass("graph");
 
     var indices = [],
         winners = [],
@@ -1026,7 +1031,7 @@ var drawGameTypeGraph = function (gamestats, ordered) {
         colors: [ "#CB4B4B", "#90D800" ],
         HtmlText: false,
         legend : {
-          backgroundColor : '#D2E8FF' // Light blue 
+          backgroundColor : '#D2E8FF' // Light blue
         },
         bars : {
           show : true,
@@ -1099,7 +1104,7 @@ var drawSingleGameSummaryGraph = function (elem, numWon, numLost, numRounds, hea
         xaxis : { showLabels : false },
         yaxis : { showLabels : false },
         pie : {
-          show : true, 
+          show : true,
           explode : 0
         },
         legend : {
