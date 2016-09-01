@@ -42,6 +42,14 @@ div.tabs {
 	color: #d2dbc8;
 }
 
+.winner {
+	color: #9f9;
+}
+
+.looser {
+	color: #F99;
+}
+
 /*
 *
 Header of Betting screen:
@@ -367,6 +375,17 @@ div#scoreTableContainer .hovered {
 	background-color: #595a56;
 }
 
+div#scoreTableScreen .deleteButton {
+	color: red;
+	font-size: 18px;
+	float: left;
+	vertical-align: middle;
+	position: relative;
+	top: -3px;
+	right: 6px;
+	margin-left: 6px;
+}
+
 div#sessionControlScreen {
 	width: 806px;
 	min-height: 300px;
@@ -533,5 +552,9 @@ div#skyldeposenSummary {
 	font-size: 100px;
 	color: #F77;
 	font-weight: bolder;
+}
+
+#skyldeposenScreen tr.skyldePoseRemaining {
+	border-top: 5px double #d2dbc8;
 }
 

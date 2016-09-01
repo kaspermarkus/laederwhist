@@ -71,7 +71,18 @@ var whist,
     session,
     currentRound,
     players,
-    graphData;
+    graphData,
+    skyldePosenPaid;
+
+// UTILITY FUNCTIONS:
+$.fn.extend({
+    addClassFromNumber: function (number) {
+        if (number === 0) {
+            return this;
+        }
+        return this.addClass((number < 0) ? "looser" : "winner");
+    }
+});
 
 var isNolo = function (type) {
     return (type == "sol" || type == "ren sol" || type == "sol bordlægger");
@@ -377,13 +388,26 @@ var submitRound = function () {
     updateScoreTable();
     showScoreTableScreen();
 
+    saveCurrentWhist();
+};
+
+var saveCurrentWhist = function () {
     //save to file via php script
-    jQuery.post("laeder_remote.php",
-        JSON.stringify(whist),
-        function (a, b, c) {
-            console.log(b);
-        }, 'json');
+    $.ajax({
+        type: "POST",
+        url: "laeder_remote.php",
+        data: JSON.stringify(whist),
+        success: function() {
+            console.log("Game successfully saved to server")
+        },
+        failure: function (error) {
+            console.log("Error in saving game to the server. Response was: " + JSON.stringify(error));
+        },
+        dataType: 'json'
+    });
 }
+
+
 
 var initWhist = function () {
     var url = document.location.href;
@@ -397,7 +421,16 @@ var initWhist = function () {
         },
          async: false,
          cache: false
+    });
 
+    // get skyldeposen paid info:
+    jQuery.ajax({
+         url: "data/paid.json",
+         success: function(result, a, b) {
+            skyldePosenPaid = $.parseJSON(b.responseText);
+        },
+         async: false,
+         cache: false
     });
 
     players = whist.players;
@@ -527,7 +560,7 @@ var updateScoreTable = function () {
         data: {},
         min: 0,
         max: 0
-    }
+    };
     var indices = {};
     var totals = {};
     var round, td;
@@ -549,7 +582,7 @@ var updateScoreTable = function () {
         headerRow.append("<th>"+v+"</th>");
         newRow.append("<td></td>");
         firstRow.append("<td>0</td>");
-        indices[v]= k+2;
+        indices[v]= k+2; // the td-index into the row where the players score is set
         totals[v] = 0;
         graphData.data[v] = [[0,0]];
     });
@@ -563,6 +596,27 @@ var updateScoreTable = function () {
         var tr = $("<tr>"+newRow.html()+"</tr>").data(round).addClass("round"+i);
         $("th", tr).text("runde "+(i+1)+": "+round.betName).addClass("betHeader");
 
+        // add delete button if this is latest game:
+        if (i === session.games.length-1) {
+            var deleteButton = $("<div>").addClass("deleteButton").text("X").click(function () {
+                if (window.confirm("Er du SIKKER på at du vil slette spillet? Dette kan ikke fortrydes!")) {
+                    console.log("Delete last game");
+                    session.games.pop();
+                    updateScoreTable();
+                    saveCurrentWhist();
+                }
+            });
+            var header = $("th", tr);
+            header.prepend(deleteButton)
+            tr.find(".deleteButton").hide();
+            tr.mouseover(function () {
+                deleteButton.show();
+            });
+            tr.mouseleave(function () {
+                deleteButton.hide();
+            });
+        }
+
         var activePlayers = round.activePlayers;
         $.each(sessionPlayers, function (k, v) {
             var score =  round.results[v];
@@ -575,41 +629,41 @@ var updateScoreTable = function () {
             if (totals[v] < graphData.min) graphData.min = totals[v]-2;
             if (totals[v] > graphData.max) graphData.max = totals[v]+2;
         });
-        printScores("totals", { target: tr }, indices);
+        printScores("totals", tr, indices);
 
-        tr.mouseover(function (v) {
-            printScores("results", v, indices, "hovered");
-        }).mouseleave(function (v) {
-            printScores("totals", v, indices);
+        tr.mouseover(function () {
+            printScores("results", $(this), indices, "hovered");
+        }).mouseleave(function () {
+            printScores("totals", $(this), indices);
         });
 
         $(tr).prependTo(tbl, "tr:first");
     }
     $(headerRow).prependTo(tbl,"tr:first");
-}
+};
 
 
 /*
  * print value from 'field' in the data provided in the tr
  */
-var printScores = function (field, v, indices, extraClass) {
-    var tr = $(v.target).is("td") ? $(v.target.parentNode) :  $(v.target);
+var printScores = function (field, tr, indices, extraClass) {
+    // var tr = $(v.target).is("td") ? $(v.target.parentNode) :  $(v.target);
     var round = tr.data();
 
     var activePlayers = round.activePlayers;
-    $.each(activePlayers, function (key, val) {
-        var score = round[field][val];
+    $.each(activePlayers, function (_, playername) {
+        var score = round[field][playername];
         var colorClass = "neutral";
         if (score > 0) colorClass = "winner";
         if (score < 0) colorClass = "looser";
 
-        var td = $("td:nth-child("+indices[val]+")", tr).removeClass().addClass(colorClass);
+        var td = $("td:nth-child("+indices[playername]+")", tr).removeClass().addClass(colorClass);
         if (extraClass)
             td.addClass(extraClass);
         //mark with spade symbol the person who did the bet
-        var html = (val == round.better ? "&spades; " : "&nbsp;&nbsp;&nbsp;");
+        var html = (playername == round.better ? "&spades; " : "&nbsp;&nbsp;&nbsp;");
         html += score;
-        html += "&nbsp;&nbsp;&nbsp;<b><span class=\"indicator-dot " + ((round["results"][val] > 0) ? "winner" : "looser")
+        html += "&nbsp;&nbsp;&nbsp;<b><span class=\"indicator-dot " + ((round["results"][playername] > 0) ? "winner" : "looser")
              + "\">&bull;</span></b>";
 
         td.html(html);
@@ -724,7 +778,40 @@ var drawScoreGraph = function (data, min, max) {
     tbl.append(row);
 
     $("#skyldeposenSummary").text((-sumTotal)+" kr.");
+
+    // Write out how much people have paid
+    updateSkyldePosenPaidTable(totals);
+};
+
+var updateSkyldePosenPaidTable = function (totals) {
+    var tbl = $("#skyldeposenPaidTable");
+    tbl.html("");
+    var sumTotal = 0;
+    //create headers with names:
+    var namesRow = $("<tr></tr>").addClass("playerNames");
+    namesRow.append("<th></th>");
+
+    var lossRow = $("<tr></tr>")
+    lossRow.append("<th>Samlet tab</th>");
+    var paidRow = $("<tr></tr>");
+    paidRow.append("<th>Betalt</th>");
+    var remainingRow = $("<tr></tr>");
+    remainingRow.append("<th>Resterende</th>").addClass("skyldePoseRemaining");
+
+    $.each(players, function (k, name) {
+        var total = totals[name];
+        var paid = skyldePosenPaid[name] || 0;
+        namesRow.append("<th>"+name+"</th>");
+        lossRow.append($("<td>").text(total).addClassFromNumber(total));
+        paidRow.append($("<td>").text(paid).addClassFromNumber(paid));
+        remainingRow.append($("<td>").text(total + paid).addClassFromNumber(total + paid));
+    });
+    tbl.append(namesRow);
+    tbl.append(lossRow);
+    tbl.append(paidRow);
+    tbl.append(remainingRow);
 }
+
 
 
 
