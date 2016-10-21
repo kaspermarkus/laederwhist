@@ -44,8 +44,7 @@ var ordering = {
     "sol": 60,
     "ren sol": 61,
     "sol bordlægger": 62
-}
-
+};
 
 var costs = {
     "8": [ 0.75, 1.25, 1.75 ],
@@ -259,13 +258,13 @@ var setupActivePlayersTable = function () {
     //Draw table
     var table = $("table#activePlayers tr");
 
-    for (var i=0; i<players.length; i++) {
-        var td = $("<td></td>").addClass(players[i]).append(players[i]);
-        if ($.inArray(players[i], currentRound.activePlayers) != -1) {
+    $.each(players, function (playerid, playerInfo) {
+        var td = $("<td></td>").addClass(playerid).append(playerInfo.nickname).data('playerid', playerid);
+        if ($.inArray(playerid, currentRound.activePlayers) != -1) {
             td.addClass("selected");
         }
         table.append(td);
-    };
+    });
     drawPlayerTables();
 
 
@@ -275,11 +274,11 @@ var setupActivePlayersTable = function () {
             //remove the player from list
             el.removeClass("selected");
             currentRound.activePlayers = jQuery.grep(currentRound.activePlayers, function(value) {
-                return value != el.text();
+                return value != el.data('playerid');
             });
         } else if (currentRound.activePlayers.length < 4) { //if unselected and room for more players
             el.addClass("selected");
-            currentRound.activePlayers.push(el.text());
+            currentRound.activePlayers.push(el.data('playerid'));
         }
         //update player tables;
         drawPlayerTables();
@@ -395,45 +394,51 @@ var saveCurrentWhist = function () {
     //save to file via php script
     $.ajax({
         type: "POST",
-        url: "laeder_remote.php",
+        url: "save_session.php",
         data: JSON.stringify(whist),
         success: function() {
             console.log("Game successfully saved to server")
         },
-        failure: function (error) {
-            console.log("Error in saving game to the server. Response was: " + JSON.stringify(error));
+        error: function (error) {
+            console.error("Error in saving game to the server. Response was: " + JSON.stringify(error));
         },
-        dataType: 'json'
+        dataType: 'json',
+        async: false,
     });
 }
 
-
-
 var initWhist = function () {
     var url = document.location.href;
+        //Get club info:
+    jQuery.ajax({
+         url: "get_club_info.php",
+         success: function(result, a, b) {
+            // whist = $.parseJSON(b.responseText);
+            players = JSON.parse(b.responseText);
+        },
+        error: function () {
+            console.error("Unable to retrieve info about club");
+        },
+        async: false,
+        cache: false
+    });
+
     //if local, one file, else other
-    url = "data/whistklubben"+((url.substring(0, 8) == "file:///")?".local":"")+".json";
+    // url = "data/whistklubben"+((url.substring(0, 8) == "file:///")?".local":"")+".json";
     //Get other game info:
     jQuery.ajax({
-         url:    url,
+         url: "get_games_info.php",
          success: function(result, a, b) {
             whist = $.parseJSON(b.responseText);
         },
-         async: false,
-         cache: false
-    });
-
-    // get skyldeposen paid info:
-    jQuery.ajax({
-         url: "data/paid.json",
-         success: function(result, a, b) {
-            skyldePosenPaid = $.parseJSON(b.responseText);
+        error: function () {
+            console.error("Unable to retrieve info about games");
         },
          async: false,
          cache: false
     });
 
-    players = whist.players;
+    // players = whist.players;
     var match = window.location.search.match(/\?sessionID=(.*)$/);
     if (match && match.length == 2 && whist.sessions[match[1]]) {
         session = whist.sessions[match[1]];
@@ -453,9 +458,9 @@ var initWhist = function () {
         };
     }
     currentRound = {};
-    currentRound.activePlayers = players.slice(0,4);
+    currentRound.activePlayers = Object.keys(players).slice(0,4);
     $(".headerContainer h1").text("Læderwhist: "+session.name);
-}
+};
 
 var setupUI = function () {
     initWhist();
@@ -540,15 +545,15 @@ var setupStatisticsControlScreen = function () {
 
     select = $("#statisticsPlayerSelect1");
     select.append("<option value='default'>alle spillere</option>");
-    $.each(whist.players, function (k, v) {
-        select.append("<option value='"+k+"'>"+v+"</option>");
+    $.each(players, function (playerid, playerInfo) {
+        select.append("<option value='"+playerid+"'>"+playerInfo.nickname+"</option>");
     });
     select.change(trimGamesForStatistics);
 
     select = $("#statisticsPlayerSelect2");
     select.append("<option value='default'>alle spillere</option>");
-    $.each(whist.players, function (k, v) {
-        select.append("<option value='"+k+"'>"+v+"</option>");
+    $.each(players, function (playerid, playerInfo) {
+        select.append("<option value='"+playerid+"'>"+playerInfo.nickname+"</option>");
     });
     select.change(trimGamesForStatistics);
 };
@@ -570,10 +575,10 @@ var updateScoreTable = function () {
     var newRow = $("<tr></tr>").append("<th>a</th>");
     headerRow.append("<th>melding</th>");
     var sessionPlayers = [];
-    $.each(players, function (k, v) {
+    $.each(players, function (playerid, playerinfo) {
         for (var i=0; i<session.games.length; i++) {
-            if (session.games[i].results[v]) {
-                sessionPlayers.push(v);
+            if (session.games[i].results[playerid]) {
+                sessionPlayers.push(playerid);
                 break;
             }
         }
@@ -691,7 +696,12 @@ var drawScoreGraph = function (data, min, max) {
 
     var container = document.getElementById('scoreGraph');
     var arr = [];
-    arr.push({ data : [[0,0],[data[players[0]].length,0]], shadowSize : 0, color : '#545454' }); // Horizontal)
+    // find number of games played, by taking first player in data and counting
+    var playername = Object.keys(data)[0];
+    if (!playername) {
+        console.error("Cannot draw a graph when no games have been played");
+    }
+    arr.push({ data : [[0,0],[data[playername].length,0]], shadowSize : 0, color : '#545454' }); // Horizontal)
     $.each(data, function (k, v) {
         arr.push({data: v, label: k, points : { show : true }, lines: { show: true }});
     });
@@ -736,11 +746,11 @@ var drawScoreGraph = function (data, min, max) {
     var firstRow = $("<tr></tr>").append("<th class='betHeader'>Regnskab start</th>");
     var newRow = $("<tr></tr>").append("<th>a</th>");
 
-    $.each(players, function (k, v) {
-        tr.append("<th>"+v+"</th>");
+    $.each(players, function (playerid, playerInfo) {
+        tr.append("<th>"+playerInfo.nickname+"</th>");
         newRow.append("<td></td>");
         firstRow.append("<td>0</td>");
-        totals[v] = 0;
+        totals[playerid] = 0;
     });
     tbl.append(tr);
     tbl.append(firstRow);
@@ -752,11 +762,11 @@ var drawScoreGraph = function (data, min, max) {
         var finalIndex = session.games.length - 1;
         var finalScores = session.games[finalIndex].totals;
 
-        $.each(players, function (k, player) {
-            var finalScore = finalScores[player];
+        $.each(players, function (playerid, playerInfo) {
+            var finalScore = finalScores[playerid];
             if (finalScore < 0) {
                 row.append("<td class='looser'>"+finalScore+"</td>");
-                totals[player] += finalScore;
+                totals[playerid] += finalScore;
                 sumTotal += finalScore;
             } else if (finalScore > 0) {
                 row.append("<td>x</td>");
@@ -771,8 +781,8 @@ var drawScoreGraph = function (data, min, max) {
     var row = $("<tr></tr>");
     row.append("<th class='betHeader'>I alt</th>");
     //write out totals
-    $.each(players, function (k, player) {
-        row.append("<th>"+totals[player]+"</th>");
+    $.each(players, function (playerid, playerInfo) {
+        row.append("<th>"+totals[playerid]+"</th>");
     });
 
     tbl.append(row);
@@ -798,10 +808,10 @@ var updateSkyldePosenPaidTable = function (totals) {
     var remainingRow = $("<tr></tr>");
     remainingRow.append("<th>Resterende</th>").addClass("skyldePoseRemaining");
 
-    $.each(players, function (k, name) {
-        var total = totals[name];
-        var paid = skyldePosenPaid[name] || 0;
-        namesRow.append("<th>"+name+"</th>");
+    $.each(players, function (playerid, playerInfo) {
+        var total = totals[playerid];
+        var paid = playerInfo.paid || 0;
+        namesRow.append("<th>"+playerInfo.nickname+"</th>");
         lossRow.append($("<td>").text(total).addClassFromNumber(total));
         paidRow.append($("<td>").text(paid).addClassFromNumber(paid));
         remainingRow.append($("<td>").text(total + paid).addClassFromNumber(total + paid));
@@ -868,8 +878,7 @@ var pruneToSingleGame = function (games, session_id) {
     return games;
 }
 
-var pruneToSinglePlayer = function (games, playerind) {
-    var playername = games.players[playerind];
+var pruneToSinglePlayer = function (games, playername) {
     var pruned_games = {
         sessions: {}
     };
@@ -890,9 +899,7 @@ var pruneToSinglePlayer = function (games, playerind) {
     return pruned_games;
 }
 
-var pruneToTeam = function (games, playerind1, playerind2) {
-    var playername1 = games.players[playerind1];
-    var playername2 = games.players[playerind2];
+var pruneToTeam = function (games, playername1, playername2) {
     var pruned_games = {
         sessions: {}
     };

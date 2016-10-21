@@ -384,6 +384,7 @@ div#scoreTableScreen .deleteButton {
 	top: -3px;
 	right: 6px;
 	margin-left: 6px;
+	cursor: pointer;
 }
 
 div#sessionControlScreen {
@@ -557,4 +558,26 @@ div#skyldeposenSummary {
 #skyldeposenScreen tr.skyldePoseRemaining {
 	border-top: 5px double #d2dbc8;
 }
+
+#logoutArea {
+    position: absolute;
+    right: 0;
+    top: 0;
+    border-radius: 3px;
+    padding: 5px;
+    background-color: #999;
+	border-bottom-width: 2px;
+	border-left-width: 2px;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-bottom-color: rgb(204, 204, 204);
+	border-left-color: rgb(204, 204, 204);
+}
+
+#logoutArea a {
+    color: #333;
+    font-weight: bolder;
+    text-decoration: none;}
 

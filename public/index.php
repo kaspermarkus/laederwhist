@@ -1,3 +1,13 @@
+<?php
+ini_set('display_errors', 1);
+error_reporting(~0);
+
+session_start();
+if (!isset($_SESSION["username"])) {
+  header("location:login.html");
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -10,6 +20,9 @@
     <script type="text/javascript" src="lib/jquery.js"></script>
     <script type="text/javascript" src="lib/flotr2.min.js"></script>
 
+    <div id="logoutArea">
+      <a href="logout.php">Log out</a>
+    </div>
     <div id="tabs" class="tabs">
       <ul>
         <li id="sessionControlTab" class="tab selected"><font>spil styring</font></li>
