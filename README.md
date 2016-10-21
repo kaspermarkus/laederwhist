@@ -1,6 +1,8 @@
 ## Læderwhist ##
 
-Program til at holde styr på din whist klubs spil.. Hold styr på jeres spil, tast jeres spil ind i Læderwhist og lad den holde regnskab og vise statestik.
+Program til at holde styr på din whist klubs spil.. 
+
+Tast jeres spil ind i Læderwhist og lad den holde regnskab og vise statestik.
 
 ## Instruktioner ##
 
