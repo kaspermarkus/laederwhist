@@ -400,7 +400,7 @@ var saveCurrentWhist = function () {
             console.log("Game successfully saved to server")
         },
         error: function (error) {
-            console.error("Error in saving game to the server. Response was: " + JSON.stringify(error));
+            window.alert("Error in saving game to the server. Response was: " + JSON.stringify(error));
         },
         dataType: 'json',
         async: false,
@@ -417,7 +417,7 @@ var initWhist = function () {
             players = JSON.parse(b.responseText);
         },
         error: function () {
-            console.error("Unable to retrieve info about club");
+            window.alert("Unable to retrieve info about club");
         },
         async: false,
         cache: false
@@ -432,7 +432,7 @@ var initWhist = function () {
             whist = $.parseJSON(b.responseText);
         },
         error: function () {
-            console.error("Unable to retrieve info about games");
+            window.alert("Unable to retrieve info about games");
         },
          async: false,
          cache: false
