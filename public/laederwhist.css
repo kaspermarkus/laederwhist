@@ -1,53 +1,53 @@
 body {
-	background-color: #000;
-	margin-top: 40px;
+    background-color: #000;
+    margin-top: 40px;
 }
 
 table, caption, td, tr, th {
-	margin:0;
-	padding:0;
-	font-weight:normal;
-	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+    margin:0;
+    padding:0;
+    font-weight:normal;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
 }
 
 div.tabs {
-	margin: 0px auto;
-	width: 800px;
-	text-align: right;
+    margin: 0px auto;
+    width: 800px;
+    text-align: right;
 }
 
 .tabs ul {
-	list-style: none;
-	padding:0;
-	margin:0;
-	margin-bottom: -1px;
+    list-style: none;
+    padding:0;
+    margin:0;
+    margin-bottom: -1px;
 }
 
 .tabs li {
-	padding: 4px 12px 4px 12px;
-	display: inline;
-	border: solid;
-	border-width: 2px 2px 0 2px;
-	margin: 0 0.5em 0 0;
-	background-color: #000000;
-	font-size: 15px;
-	font-weight: bolder;
-	color: #929B78;
-	border-bottom: 0px solid #640909;
-	cursor: pointer;
+    padding: 4px 12px 4px 12px;
+    display: inline;
+    border: solid;
+    border-width: 2px 2px 0 2px;
+    margin: 0 0.5em 0 0;
+    background-color: #000000;
+    font-size: 15px;
+    font-weight: bolder;
+    color: #929B78;
+    border-bottom: 0px solid #640909;
+    cursor: pointer;
 }
 
 .tabs li.selected,  .tabs li.selected font {
-	background-color: #363921;
-	color: #d2dbc8;
+    background-color: #363921;
+    color: #d2dbc8;
 }
 
 .winner {
-	color: #9f9;
+    color: #9f9;
 }
 
 .looser {
-	color: #F99;
+    color: #F99;
 }
 
 /*
@@ -57,62 +57,62 @@ Header of Betting screen:
 */
 
 div#headerPling {
-	width: 890px;
-	padding: 2px;
-	background-color: #d2dbc8;
-	margin: 0px auto;
+    width: 890px;
+    padding: 2px;
+    background-color: #d2dbc8;
+    margin: 0px auto;
 }
 
 div#headerShader {
-	padding: 3px 3px 3px 3px;
-	background-color: #640909;
+    padding: 3px 3px 3px 3px;
+    background-color: #640909;
 }
 
 div.headerContainer {
-	background-color: #363921;
-	min-height: 100px;
-	padding-left: 25px;
-	padding-top: 1px;
-	color: #d2dbc8;
+    background-color: #363921;
+    min-height: 100px;
+    padding-left: 25px;
+    padding-top: 1px;
+    color: #d2dbc8;
 }
 
 div.headerContainer h1 {
-	font-weight: bolder;
-	font-size: 40px;
-	color: #d2dbc8;
+    font-weight: bolder;
+    font-size: 40px;
+    color: #d2dbc8;
 }
 
 div.headerContainer table {
-	border-collapse:collapse;
-	margin-left:auto;
+    border-collapse:collapse;
+    margin-left:auto;
     margin-right:auto;
     font-size: 12px;
-	border: hidden;
-	border: 0px;
+    border: hidden;
+    border: 0px;
 }
 
 div.headerContainer table td {
-	padding:5px;
-	text-align:center;
-	text-decoration: line-through;
-	color: #929b78;
-	cursor: pointer;
+    padding:5px;
+    text-align:center;
+    text-decoration: line-through;
+    color: #929b78;
+    cursor: pointer;
 }
 
 div.headerContainer table th {
-	padding:5px;
-	font-weight: bold;
-	text-align:left;
-	color: #d2dbc8;
-	background-color: #363921;
-	border:0px;
+    padding:5px;
+    font-weight: bold;
+    text-align:left;
+    color: #d2dbc8;
+    background-color: #363921;
+    border:0px;
 }
 
 div.headerContainer td.selected {
-	text-decoration: none;
-	color: #d2dbc8;
-	font-weight: bold;
-	background: #363921;
+    text-decoration: none;
+    color: #d2dbc8;
+    font-weight: bold;
+    background: #363921;
 }
 
 /*
@@ -122,64 +122,64 @@ Bet area
 */
 
 .betTables {
-	float: left;
-	width: 450px;
-	padding-bottom: 20px;
+    float: left;
+    width: 450px;
+    padding-bottom: 20px;
 }
 
 div.betArea {
-	padding: 20px;
-	width: 800px;
+    padding: 20px;
+    width: 800px;
 }
 
 table {
-	font-size: 12px;
-	border-collapse: collapse;
-	border: hidden;
-	border:3px solid #595a56;
+    font-size: 12px;
+    border-collapse: collapse;
+    border: hidden;
+    border:3px solid #595a56;
 
 }
 
 th {
-	color: #d2dbc8;
-	font-weight: bold;
-	padding:5px;
-	background-color: #595a56;
-	border:1px solid #d2dbc8;
+    color: #d2dbc8;
+    font-weight: bold;
+    padding:5px;
+    background-color: #595a56;
+    border:1px solid #d2dbc8;
 }
 
 td {
-	color: #e2ebd8;
-	padding: 6px 17px 6px 17px;
+    color: #e2ebd8;
+    padding: 6px 17px 6px 17px;
 }
 
 .bold {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 
 td.selected, .betArea td.selected, .verticalStriped td.selected:nth-of-type(even) {
-	padding: 3px 14px 3px 14px;
-	font-weight: bolder;
-	background: #d2dbc8;
-	color: #000;
-	cursor: default;
+    padding: 3px 14px 3px 14px;
+    font-weight: bolder;
+    background: #d2dbc8;
+    color: #000;
+    cursor: default;
 }
 
 #partnerTable td.selected {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 .betArea #solTable {
-	margin-top: 20px;
+    margin-top: 20px;
 }
 
 .betArea td {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 #betDetailsTable table {
-	margin: 0px 0px 30px 0px;
+    margin: 0px 0px 30px 0px;
 }
 
 .striped tr:nth-of-type(odd) {
@@ -187,8 +187,8 @@ td.selected, .betArea td.selected, .verticalStriped td.selected:nth-of-type(even
 }
 
 .verticalStriped td:nth-of-type(even) {
-  	background-color:#626660;
-	cursor: pointer;
+      background-color:#626660;
+    cursor: pointer;
 }
 
 
@@ -199,79 +199,79 @@ Results area
 */
 
 #bottomBetContainer {
-	width: 850px;
-	min-height: 200px;
-	margin: 0px auto;
+    width: 850px;
+    min-height: 200px;
+    margin: 0px auto;
     border: 2px solid  #d2dbc8;
-	background-color: #696B65;
-	clear: left;
-	margin-bottom: 10px
+    background-color: #696B65;
+    clear: left;
+    margin-bottom: 10px
 }
 
 #resultContainer table {
-	font-size: 12px;
-	border-collapse: collapse;
-	border: hidden;
-	border:3px solid #595a56;
-	margin-top: 20px;
-	margin-left: 20px;
+    font-size: 12px;
+    border-collapse: collapse;
+    border: hidden;
+    border:3px solid #595a56;
+    margin-top: 20px;
+    margin-left: 20px;
 }
 
 #resultContainer table td {
-	color: #d2dbc8;
-	padding: 6px 12px 6px 12px;
-	cursor: pointer;
+    color: #d2dbc8;
+    padding: 6px 12px 6px 12px;
+    cursor: pointer;
 
 }
 
 #resultContainer table th {
-	color: #d2dbc8;
-	font-weight: bold;
-	padding:5px;
-	background-color: #595a56;
-	border:1px solid #d2dbc8;
+    color: #d2dbc8;
+    font-weight: bold;
+    padding:5px;
+    background-color: #595a56;
+    border:1px solid #d2dbc8;
 }
 
 #resultContainer td.selected {
-	/*border:1px solid #d2dbc8;*/
-	padding: 3px 14px 3px 14px;
-	font-weight: bolder;
-	background: #d2dbc8;
-	color: #000;
+    /*border:1px solid #d2dbc8;*/
+    padding: 3px 14px 3px 14px;
+    font-weight: bolder;
+    background: #d2dbc8;
+    color: #000;
 }
 
 #resultContainer {
-	float: left;
-	min-height: 450px;
-	padding-bottom: 20px;
+    float: left;
+    min-height: 450px;
+    padding-bottom: 20px;
 }
 
 div#betSummary {
-	margin: 10px;
-	width: 300px;
-	height: 180px;
-	float: right;
-	background: #d2dbc8;
-	text-align: center;
-	font-size: 14px;
-	font-weight: bold;
+    margin: 10px;
+    width: 300px;
+    height: 180px;
+    float: right;
+    background: #d2dbc8;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
 }
 
 
 button#submitRound {
-	min-width: 200px;
-	min-height: 20px;
+    min-width: 200px;
+    min-height: 20px;
 }
 
 #betSummary #cost {
-	font-size: 24px;
+    font-size: 24px;
 }
 
 font.winner {
-	color: #2A2;
+    color: #2A2;
 }
 font.looser {
-	color: #A22;
+    color: #A22;
 }
 
 /*
@@ -280,283 +280,283 @@ font.looser {
 *
 */
 div#whiteShadeContainer {
-	width: 810px;
-	padding-left: 2px;
-	padding-right: 2px;
-	background-color: #d2dbc8;
-	margin: 0px auto;
+    width: 810px;
+    padding-left: 2px;
+    padding-right: 2px;
+    background-color: #d2dbc8;
+    margin: 0px auto;
 }
 
 div#darkShadeContainer {
-	/*width: 810px;*/
-	padding: 0px 4px 0px 4px;
-	background-color: #595a56;
-	margin: 0px auto;
+    /*width: 810px;*/
+    padding: 0px 4px 0px 4px;
+    background-color: #595a56;
+    margin: 0px auto;
 }
 
 div#outerContainer {
-	/*width: 800px;*/
-	min-height: 330px;
-	background-color: #696b65;
+    /*width: 800px;*/
+    min-height: 330px;
+    background-color: #696b65;
     /*margin: 0px auto;*/
-   	text-align: center;
+       text-align: center;
 }
 
 div#outerContainertable {
-	border-collapse:collapse;
-	margin-bottom:15px;
-	margin-left:auto;
+    border-collapse:collapse;
+    margin-bottom:15px;
+    margin-left:auto;
     margin-right:auto;
-	/*width:90%;*/
+    /*width:90%;*/
 }
 
 
 div#outerContainertable .selected {
-	background: #93C572;
+    background: #93C572;
 }
 
 div#scoreTableScreen {
-	width: 806px;
-	min-height: 300px;
-	border: 2px solid #d2dbc8;
-	border-top: 0px;
-	background-color: #696b65;
-	margin: 0px auto;
-	padding-top: 20px;
+    width: 806px;
+    min-height: 300px;
+    border: 2px solid #d2dbc8;
+    border-top: 0px;
+    background-color: #696b65;
+    margin: 0px auto;
+    padding-top: 20px;
 }
 
 div#scoreGraphContainer {
-	margin: 0px auto;
-	min-height: 200px;
-	width: 750px;
-	padding: 10px 4px 0px 0px;
-	background-color: #d2dbc8;
+    margin: 0px auto;
+    min-height: 200px;
+    width: 750px;
+    padding: 10px 4px 0px 0px;
+    background-color: #d2dbc8;
 }
 
 div#scoreGraph {
-	min-height: 200px;
-	background-color: #d2dbc8;
+    min-height: 200px;
+    background-color: #d2dbc8;
 }
 
 div#scoreTableContainer {
-	min-height: 300px;
-	border: 4px solid #595a56;
-	border-top: 0px;
-	padding-top: 30px;
-	padding-bottom: 40px;
+    min-height: 300px;
+    border: 4px solid #595a56;
+    border-top: 0px;
+    padding-top: 30px;
+    padding-bottom: 40px;
     text-align: center;
 }
 
 
 #scoreTableContainer table {
-	margin-left:auto;
+    margin-left:auto;
     margin-right:auto;
     min-width: 600px;
 }
 
 #scoreTableContainer td {
-	color: #d2dbc8;
-	border-left: 1px solid #d2dbc8;
-	border-right: 1px;
+    color: #d2dbc8;
+    border-left: 1px solid #d2dbc8;
+    border-right: 1px;
 }
 
 #scoreTableContainer .betHeader {
-	text-align: left;
+    text-align: left;
 }
 
 div#scoreTableContainer .winner {
-	color: #9f9;
+    color: #9f9;
 }
 div#scoreTableContainer .looser {
-	color: #F99;
+    color: #F99;
 }
 
 div#scoreTableContainer .hovered {
-	background-color: #595a56;
+    background-color: #595a56;
 }
 
 div#scoreTableScreen .deleteButton {
-	color: red;
-	font-size: 18px;
-	float: left;
-	vertical-align: middle;
-	position: relative;
-	top: -3px;
-	right: 6px;
-	margin-left: 6px;
-	cursor: pointer;
+    color: red;
+    font-size: 18px;
+    float: left;
+    vertical-align: middle;
+    position: relative;
+    top: -3px;
+    right: 6px;
+    margin-left: 6px;
+    cursor: pointer;
 }
 
 div#sessionControlScreen {
-	width: 806px;
-	min-height: 300px;
-	border: 2px solid #d2dbc8;
-	border-top: 0px;
-	background-color: #696b65;
-	margin: 0px auto;
-	padding-top: 0px;
+    width: 806px;
+    min-height: 300px;
+    border: 2px solid #d2dbc8;
+    border-top: 0px;
+    background-color: #696b65;
+    margin: 0px auto;
+    padding-top: 0px;
 }
 
 div#sessionChooserContainer {
-	margin: 0px auto;
-	/*min-height: 200px;
-	*/padding: 10px 0px 10px 0px;
-	background-color: #d2dbc8;
-	border: 2px solid #640909;
-	text-align: center;
+    margin: 0px auto;
+    /*min-height: 200px;
+    */padding: 10px 0px 10px 0px;
+    background-color: #d2dbc8;
+    border: 2px solid #640909;
+    text-align: center;
 }
 
 div#currentSessionContainer {
-	padding-left: 60px;
-	padding-top: 10px;
-	color: #d2dbc8;
+    padding-left: 60px;
+    padding-top: 10px;
+    color: #d2dbc8;
 
 }
 
 div#sessionNameArea, div#sessionCommentsArea {
-	padding-left: 40px;
-	padding-bottom: 20px;
+    padding-left: 40px;
+    padding-bottom: 20px;
 }
 
 #sessionCommentsArea textarea {
-	width: 300px;
-	height: 120px;
+    width: 300px;
+    height: 120px;
 }
 
 div#statisticsScreen {
-	max-width: 800px;
-	min-height: 300px;
-/*	color: #d2dbc8;
+    max-width: 800px;
+    min-height: 300px;
+/*    color: #d2dbc8;
 */font-size: 12px;
-	border: 2px solid #d2dbc8;
-	border-top: 0px;
-	background-color: #696b65;
-	margin: 0px auto;
-	padding-top: 0px;
-	margin-bottom: 30px;
-	text-align: center;
+    border: 2px solid #d2dbc8;
+    border-top: 0px;
+    background-color: #696b65;
+    margin: 0px auto;
+    padding-top: 0px;
+    margin-bottom: 30px;
+    text-align: center;
 }
 
 div#statisticsControlContainer {
-	margin: 0px auto;
-	margin-top: 0px;
-	margin-bottom: 20px;
-	/*min-height: 200px;
-	*/
-	padding: 10px 0px 10px 0px;
-	background-color: #d2dbc8;
-	border: 2px solid #640909;
-	text-align: center;
+    margin: 0px auto;
+    margin-top: 0px;
+    margin-bottom: 20px;
+    /*min-height: 200px;
+    */
+    padding: 10px 0px 10px 0px;
+    background-color: #d2dbc8;
+    border: 2px solid #640909;
+    text-align: center;
 }
 
 #statisticsScreen .graph {
-	width: 600px;
-	height: 300px;
-	margin: 0px auto;
-	background-color: #d2dbc8;
-	border: 8px solid #d2dbc8;
+    width: 600px;
+    height: 300px;
+    margin: 0px auto;
+    background-color: #d2dbc8;
+    border: 8px solid #d2dbc8;
 }
 
 
 #statisticsScreen .table {
-	margin-top: 10px;
-	font-size: 11px;
+    margin-top: 10px;
+    font-size: 11px;
 }
 
 #statisticsScreen td {
-	padding-right: 0px;
-	padding-left: 0px;
+    padding-right: 0px;
+    padding-left: 0px;
 }
 
 #statisticsScreen .summary {
-	font-weight: bold;
-	border-top: 2px solid #640909;
-	border-bottom: 4px solid #640909;
-	background-color: #595a56;
+    font-weight: bold;
+    border-top: 2px solid #640909;
+    border-bottom: 4px solid #640909;
+    background-color: #595a56;
 }
 
 #summaryGraphsArea {
-	width: 100%;
-		background-color: #696b65;
-		height: 250px;
+    width: 100%;
+        background-color: #696b65;
+        height: 250px;
 }
 #statisticsScreen .summarygraph-left, #statisticsScreen .summarygraph-right {
-	width: 34%;
-	height: 200px;
-	background-color: #d2dbc8;
-	border: 8px solid #d2dbc8;
-	margin-top: 20px;
+    width: 34%;
+    height: 200px;
+    background-color: #d2dbc8;
+    border: 8px solid #d2dbc8;
+    margin-top: 20px;
 }
 
 #statisticsScreen .summarygraph-left {
-	float: left;
-	margin-left: 100px;
+    float: left;
+    margin-left: 100px;
 }
 
 #statisticsScreen .summarygraph-right {
-	float: right;
-	margin-right: 100px;
+    float: right;
+    margin-right: 100px;
 }
 
 /* Skyldeposen screen */
 div#skyldeposenScreen {
-	width: 806px;
-	min-height: 300px;
-	border: 2px solid #d2dbc8;
-	border-top: 0px;
-	background-color: #696b65;
-	margin: 0px auto;
-	padding-top: 20px;
+    width: 806px;
+    min-height: 300px;
+    border: 2px solid #d2dbc8;
+    border-top: 0px;
+    background-color: #696b65;
+    margin: 0px auto;
+    padding-top: 20px;
 }
 
 div#skyldeposenTableContainer {
-	min-height: 300px;
-	border: 4px solid #595a56;
-	border-top: 0px;
-	padding-top: 30px;
-	padding-bottom: 40px;
+    min-height: 300px;
+    border: 4px solid #595a56;
+    border-top: 0px;
+    padding-top: 30px;
+    padding-bottom: 40px;
     text-align: center;
 }
 
 
 #skyldeposenTableContainer table {
-	margin-left:auto;
+    margin-left:auto;
     margin-right:auto;
     min-width: 600px;
 }
 
 #skyldeposenTableContainer td {
-	color: #d2dbc8;
-	border-left: 1px solid #d2dbc8;
-	border-right: 1px;
+    color: #d2dbc8;
+    border-left: 1px solid #d2dbc8;
+    border-right: 1px;
 }
 
 #skyldeposenTableContainer .betHeader {
-	text-align: left;
+    text-align: left;
 }
 
 div#skyldeposenTableContainer .looser {
-	color: #F99;
+    color: #F99;
 }
 
 div#skyldeposenSummary {
-	background-color: #595a56;
-	width: 350px;
-	min-height: 140px;
-	border: 2px solid #d2dbc8;
-	/*background-color: #696b65;*/
-	margin: 0px auto;
-	padding-top: 30px;
-	padding-bottom: 15px;
-	/*vertical-align: middle;*/
-	text-align: center;
-	font-size: 100px;
-	color: #F77;
-	font-weight: bolder;
+    background-color: #595a56;
+    width: 350px;
+    min-height: 140px;
+    border: 2px solid #d2dbc8;
+    /*background-color: #696b65;*/
+    margin: 0px auto;
+    padding-top: 30px;
+    padding-bottom: 15px;
+    /*vertical-align: middle;*/
+    text-align: center;
+    font-size: 100px;
+    color: #F77;
+    font-weight: bolder;
 }
 
 #skyldeposenScreen tr.skyldePoseRemaining {
-	border-top: 5px double #d2dbc8;
+    border-top: 5px double #d2dbc8;
 }
 
 #logoutArea {
@@ -566,18 +566,43 @@ div#skyldeposenSummary {
     border-radius: 3px;
     padding: 5px;
     background-color: #999;
-	border-bottom-width: 2px;
-	border-left-width: 2px;
-	border-top-style: none;
-	border-right-style: none;
-	border-bottom-style: solid;
-	border-left-style: solid;
-	border-bottom-color: rgb(204, 204, 204);
-	border-left-color: rgb(204, 204, 204);
+    border-bottom-width: 2px;
+    border-left-width: 2px;
+    border-top-style: none;
+    border-right-style: none;
+    border-bottom-style: solid;
+    border-left-style: solid;
+    border-bottom-color: rgb(204, 204, 204);
+    border-left-color: rgb(204, 204, 204);
 }
 
 #logoutArea a {
     color: #333;
     font-weight: bolder;
-    text-decoration: none;}
+    text-decoration: none;
+}
+
+
+#downloadDataArea {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    background-color: #999;
+    border-top-style: solid;
+    border-left-style: solid;
+    border-bottom-style: none;
+    border-top-color: #333;
+    border-left-color: #333;
+    border-top-left-radius: 20px;
+    padding-top: 8px;
+    padding-left: 10px;
+    padding-bottom: 2px;
+    padding-right: 2px;
+}
+
+#downloadDataArea a {
+    color: #333;
+    font-weight: bolder;
+    text-decoration: none;
+}
 

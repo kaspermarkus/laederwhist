@@ -23,6 +23,9 @@ if (!isset($_SESSION["username"])) {
     <div id="logoutArea">
       <a href="logout.php">Log out</a>
     </div>
+    <div id="downloadDataArea">
+      <a id="downloadDataLink">Download Backup</a>
+    </div>
     <div id="tabs" class="tabs">
       <ul>
         <li id="sessionControlTab" class="tab selected"><font>spil styring</font></li>

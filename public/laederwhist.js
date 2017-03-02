@@ -395,7 +395,7 @@ var saveCurrentWhist = function () {
     $.ajax({
         type: "POST",
         url: "save_session.php",
-        data: JSON.stringify(whist),
+        data: JSON.stringify(whist, null, 2),
         success: function() {
             console.log("Game successfully saved to server")
         },
@@ -483,6 +483,14 @@ var setupUI = function () {
     showSessionControlScreen();
     updateScoreTable();
     $("#vipTable").css('visibility','hidden');
+    AddDownloadFunction();
+};
+
+var AddDownloadFunction = function () {
+    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(whist, null, 2));
+    var dlAnchorElem = document.getElementById('downloadDataLink');
+    dlAnchorElem.setAttribute("href",     dataStr     );
+    dlAnchorElem.setAttribute("download", "whist-backup.json");
 };
 
 var showScreen = function (screen, tab) {
