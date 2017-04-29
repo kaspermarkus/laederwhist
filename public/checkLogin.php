@@ -20,7 +20,13 @@ foreach ($data as $clubname => $content) {
         $_SESSION["password"] = $password;
         $_SESSION["game_file"] = "../data/".$clubname.".json";
         $_SESSION["backup_prefix"] = "../data/backups/".$clubname;
-        $_SESSION["players_info"] = $content["players"];
+        $_SESSION["game_info"]["players"] = $content["players"];
+        if (isset($content["bet_types"])) {
+            $_SESSION["game_info"]["bet_types"] = $content["bet_types"];
+        }
+        if (isset($content["costs"])) {
+            $_SESSION["game_info"]["costs"] = $content["costs"];
+        }
         header("location:index.php");
     }
 }

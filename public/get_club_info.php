@@ -6,4 +6,4 @@ if (!isset($_SESSION["username"])) {
   die();
 }
 
-echo json_encode($_SESSION["players_info"]);
+echo json_encode($_SESSION["game_info"]);

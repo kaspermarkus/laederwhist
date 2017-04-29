@@ -46,7 +46,7 @@ var ordering = {
     "sol bordlægger": 62
 };
 
-var costs = {
+var costs_default = {
     "8": [ 0.75, 1.25, 1.75 ],
     "9": [ 2, 3, 4],
     "10": [ 5, 7, 9 ],
@@ -58,7 +58,7 @@ var costs = {
     "sol bordlægger": 14
 };
 
-var bet_types = {
+var bet_types_default = {
     ren: { bracket: 0 },
     vip: { bracket: [0,1,2] },
     halve: { bracket: 1 },
@@ -69,9 +69,11 @@ var bet_types = {
 var whist,
     session,
     currentRound,
-    players,
+    players,  // initialized via club info
     graphData,
-    skyldePosenPaid;
+    skyldePosenPaid,
+    costs, // initialized via club info - or using default above
+    bet_types; // initialized via club info - or using default above
 
 // UTILITY FUNCTIONS:
 $.fn.extend({
@@ -413,8 +415,10 @@ var initWhist = function () {
     jQuery.ajax({
          url: "get_club_info.php",
          success: function(result, a, b) {
-            // whist = $.parseJSON(b.responseText);
-            players = JSON.parse(b.responseText);
+            var club_info = JSON.parse(b.responseText);
+            players = club_info.players;
+            costs = club_info.costs || costs_default;
+            bet_types = club_info.bet_types || bet_types_default
         },
         error: function () {
             window.alert("Unable to retrieve info about club");
