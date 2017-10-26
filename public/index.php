@@ -146,17 +146,39 @@ if (!isset($_SESSION["username"])) {
         </div>
       </div>
     </div>
-   <script type="text/javascript" src="laederwhist.js"></script>
-   <div id="statisticsScreen" class="screen">
+    <script type="text/javascript" src="laederwhist.js"></script>
+    <div id="statisticsScreen" class="screen">
       <div id="statisticsControlContainer">
         vælg aften: <select id="statisticsGameSelect"></select>
         vælg spiller 1: <select id="statisticsPlayerSelect1"></select>
         vælg spiller 2: <select id="statisticsPlayerSelect2"></select>
       </div>
-    <div id="gametypeStatisticsGraph"></div>
-    <table id="gametypeStatisticsTable"></table>
-    <div id="summaryGraphsArea"></div>
-   </div>
+      <div id="generalStatsContainer">
+        <h1>Generelle Stats</h1>
+        <div id="generalStats">
+          <p><span id="numberOfSessions" class="number">20</span> whist aftener</p>
+          <p><span id="numberOfRounds" class="number">1000</span> runder spillet</p>
+          <p><span id="numberOfGamesPerSession" class="number">20</span> gennemsnitlige spil/aften</p>
+        </div>
+      </div>
+      <div id="greatestGamesStatsTables">
+        <div class="greatestGamesStatsTableContainer">
+          <h1>Største gevinst på et enkelt spil</h1>
+          <table id="greatestWinTable"></table>
+        </div>
+        <div class="greatestGamesStatsTableContainer">
+          <h1>Største tab på et spil</h1>
+          <table id="greatestLossTable"></table>
+        </div>
+        <div class="greatestGamesStatsTableContainer">
+          <h1>Største melding</h1>
+          <table id="highestBetTable"></table>
+        </div>
+      </div>
+      <div id="gametypeStatisticsGraph"></div>
+      <table id="gametypeStatisticsTable"></table>
+      <div id="summaryGraphsArea"></div>
+    </div>
 
     <div id="skyldeposenScreen" class="screen">
       <div id="skyldeposenSummary"></div>

@@ -498,6 +498,60 @@ div#statisticsControlContainer {
     margin-right: 100px;
 }
 
+#statisticsScreen #generalStatsContainer {
+    color: #d2dbc8;
+    background-color: #595a56;
+    margin-left: 150px;
+    margin-right: 150px;
+}
+
+#statisticsScreen #generalStatsContainer h1 {
+    color: #d2dbc8;
+    background-color: #595a56;
+    text-align: left;
+    margin-left: 15px;
+    padding-top: 10px;
+}
+
+#statisticsScreen #generalStatsContainer p {
+    margin: 8px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+#statisticsScreen #generalStatsContainer p .number {
+    font-size: 24px;
+}
+
+#statisticsScreen .greatestGamesStatsTableContainer {
+    background-color: #d2dbc8;
+    margin-left: 40px;
+    margin-right: 40px;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-bottom: 8px;
+    margin-bottom: 50px;
+}
+
+#statisticsScreen .greatestGamesStatsTableContainer table {
+    background-color: #595a56;
+    padding: 10px;
+    width: 100%;
+    font-size: 12px;
+}
+
+#statisticsScreen .greatestGamesStatsTableContainer h1 {
+    padding-top: 12px;
+    color: #363921;
+}
+
+#statisticsScreen .greatestGamesStatsTableContainer a {
+    color: #d2dbc8;
+    font-weight: bolder;
+    text-decoration: none;
+
+}
+
 /* Skyldeposen screen */
 div#skyldeposenScreen {
     width: 806px;

@@ -377,6 +377,10 @@ var addRadioCellListener = function (selector, clickfn) {
 var submitRound = function () {
     console.log(JSON.stringify(currentRound)); //log to console
     session.games.push(currentRound); //save to session
+    if (currentRound.results.jonas > 0) {
+        var audio = new Audio('audio/applause.mp3');
+        audio.play();
+    }
     //save session name and comments:
     whist.sessions["id"+session.timestamp] = session;
     //reset currentRound object - only keep 'activePlayers'
@@ -942,22 +946,83 @@ var updateStatistics = function (whist) {
         ordered.push(k);
     });
     ordered.sort(function (a, b) { return ordering[a] - ordering[b]; });
-
+    drawGeneralStats(gamestats);
+    drawGreatestGamesTables(gamestats, ordered);
     drawGameTypeGraph(gamestats, ordered);
     drawGameTypeTable(gamestats, ordered);
     drawGameSummaryGraphs(gamestats);
-
 }
+
+var drawGeneralStats = function (stats) {
+    var numEvenings = Object.keys(whist.sessions).length;
+    $("#numberOfSessions").html(numEvenings);
+    $("#numberOfRounds").text(stats.numRounds);
+    $("#numberOfGamesPerSession").text(parseFloat(stats.numRounds/numEvenings).toFixed(1));
+};
+
+var drawGreatestGamesTables = function (gamestats, ordered) {
+    drawGreatestGamesTable(gamestats.greatestWin, "#greatestWinTable");
+    drawGreatestGamesTable(gamestats.greatestLoss, "#greatestLossTable");
+    drawHighestBetTable(gamestats.highestBet, "#highestBetTable")
+}
+
+var drawGreatestGamesTable = function (data, id) {
+    var table = $(id).addClass("table striped").html("");
+
+    var tr = $("<tr></tr>")
+    .append("<th>#</th>")
+    .append("<th>Beløb</th>")
+    .append("<th>Melder</th>")
+    .append("<th>Melding</th>")
+    .append("<th>Link</th>");
+    table.append(tr); 
+
+    $.each(data, function (index, info) {
+        var betterString = (info.partner && info.partner !== info.better) ? 
+            info.better + " (med " + info.partner + ")" : "(selvmakker)";
+        var tr = $("<tr></tr>")
+            .append("<td>" + (index + 1) + "</td>")
+            .append("<td>" + info.cost + " kr</td>")
+            .append("<td>" + betterString +  "</td>")
+            .append("<td>" + info.gametype + " (fik "+info.stikWon+")</td>")
+            .append("<td><a href='index.php?sessionID=" + info.sessionId + "'>&#9826;</a></td>");
+        table.append(tr);
+    });
+}
+
+var drawHighestBetTable = function (data, id) {
+    var table = $(id).addClass("table striped").html("");
+
+    var tr = $("<tr></tr>")
+    .append("<th>#</th>")
+    .append("<th>Melding</th>")
+    .append("<th>Melder</th>")
+    .append("<th>Pris/stik</th>")
+    .append("<th>Beløb</th>")
+    .append("<th>Link</th>");
+    table.append(tr); 
+
+    $.each(data, function (index, info) {
+        var moneyString = info.cost + " kr. (" + info.stikWon + " stik";
+        moneyString += (info.partner && info.partner !== info.better) ? 
+            " med " + info.partner + ")" : " som selvmakker)";
+        var tr = $("<tr></tr>")
+            .append("<td>" + (index + 1) + "</td>")
+            .append("<td>" + info.gametype + "</td>")
+            .append("<td>" + info.better +  "</td>")
+            .append("<td>" + info.stikCost + " kr.</td>")
+            .append("<td>" + moneyString + "</td>")
+            .append("<td><a href='index.php?sessionID=" + info.sessionId + "'>&#9826;</a></td>");
+        table.append(tr);
+    });
+}
+
 var collectStatistics = function (whist) {
     var gamestats = {
         gametypes: {},
         numRounds: 0,
         numWon: 0,
         numLost: 0,
-        selvmakker: 0,
-        selvmakkerWins: 0,
-        winnings: [],
-        stikDiffs: [],
         winnings: {
             raw: [],
             max: 0,
@@ -975,21 +1040,81 @@ var collectStatistics = function (whist) {
             sumNeg: 0
         },
         selvmakker: 0,
-        selvmakkerWins: 0
+        selvmakkerWins: 0,
+        greatestLoss: [], // moneywise greatest loss in a round - max 10 entries, { players[], gametype, stik, cost, gameId }
+        greatestWin: [], // moneywise greatest win in a round - max 10 entries, { players[], gametype, stik, cost, gameId }
+        highestBet: [],  // highest bet (i.e. highest cost for a single stik) - max 10 entries, { players[], gametype, stik, cost, gameId },
     };
 
     //collect info about each game type:
     var sessions = whist.sessions;
-    $.each(sessions, function (sessionid, session) {
+    $.each(sessions, function (sessionId, session) {
         var games = session.games;
         $.each(games, function (gameindex, game) {
             collectGameTypeStats(gamestats.gametypes, game);
+            collectGreatestGames(game, gamestats, sessionId);
         });
     });
     collectOverallGameStats(gamestats);
 
     return gamestats;
 }
+
+// Inserts a game into either greatestLoss, greatestWin or highestBet arrays in the correct place
+var insertGreatestGame = function (arr, game, gamestats, sessionId, type) {
+    var newEntry = {
+        better: game.better,
+        partner: game.partner,
+        gametype: game.betName,
+        stikCost: game.stikCost,
+        stikWon: game.stikWon,
+        cost: game.results[game.better],
+        sessionId: sessionId
+    };
+
+    if (arr.length === 0) {
+        arr.push(newEntry);
+        return;
+    }
+
+    for (var i = 0; i < arr.length; i++) {
+        var insertHere = false;
+        if (type === "greatestLoss" && game.results[game.better] < arr[i].cost) {
+            insertHere = true;
+        }
+        if (type === "greatestWin" && game.results[game.better] > arr[i].cost) {
+            insertHere = true;
+        }
+        if (type === "highestBet" && game.stikCost > arr[i].stikCost) {
+            insertHere = true;
+        }
+
+        if (insertHere) { 
+            gamestats[type] = arr.slice(0, i).concat([newEntry]).concat(arr.slice(i, 9));
+            return;
+        }
+    }
+
+    // if we made it this far, assume we need to attach the result to the end of the array
+    arr.push(newEntry);
+}
+
+var collectGreatestGames = function (game, gamestats, sessionId) {
+    var betterCost = game.results[game.better];
+    var stikCost = game.stikCost;
+    // check for greatest loss
+    if (gamestats.greatestLoss.length < 10 || gamestats.greatestLoss[gamestats.greatestLoss.length-1].cost > betterCost) {
+        insertGreatestGame(gamestats.greatestLoss, game, gamestats, sessionId, "greatestLoss");
+    }
+    // check for greatest win
+    if (gamestats.greatestWin.length < 10 || gamestats.greatestWin[gamestats.greatestWin.length-1].cost < betterCost) {
+        insertGreatestGame(gamestats.greatestWin, game, gamestats, sessionId, "greatestWin");
+    }
+    // check for highest bet (i.e. hoejeste melding type)
+    if (gamestats.highestBet.length < 10 || gamestats.highestBet[gamestats.highestBet.length-1].stikCost < stikCost) {
+        insertGreatestGame(gamestats.highestBet, game, gamestats, sessionId, "highestBet");
+    }
+};
 
 var collectOverallGameStats = function (gamestats) {
     var gtypes = gamestats.gametypes
