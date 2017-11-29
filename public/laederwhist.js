@@ -381,6 +381,24 @@ var submitRound = function () {
         var audio = new Audio('audio/applause.mp3');
         audio.play();
     }
+    if (currentRound.results.kasper > 0) {
+        var audio = new Audio('audio/duffman.mp3');
+        audio.play();
+    }
+    if (currentRound.results.jon > 0) {
+        var audio = new Audio('audio/fanfare.mp3');
+        audio.play();
+    }
+    if (currentRound.results.mads > 0) {
+        var audio = new Audio('audio/cat.mp3');
+        audio.play();
+    }
+    if (currentRound.results.lasse > 0) {
+        var audio = new Audio('audio/hallelujah.mp3');
+        audio.play();
+    }
+
+
     //save session name and comments:
     whist.sessions["id"+session.timestamp] = session;
     //reset currentRound object - only keep 'activePlayers'
@@ -975,10 +993,10 @@ var drawGreatestGamesTable = function (data, id) {
     .append("<th>Melder</th>")
     .append("<th>Melding</th>")
     .append("<th>Link</th>");
-    table.append(tr); 
+    table.append(tr);
 
     $.each(data, function (index, info) {
-        var betterString = (info.partner && info.partner !== info.better) ? 
+        var betterString = (info.partner && info.partner !== info.better) ?
             info.better + " (med " + info.partner + ")" : "(selvmakker)";
         var tr = $("<tr></tr>")
             .append("<td>" + (index + 1) + "</td>")
@@ -1000,11 +1018,11 @@ var drawHighestBetTable = function (data, id) {
     .append("<th>Pris/stik</th>")
     .append("<th>Beløb</th>")
     .append("<th>Link</th>");
-    table.append(tr); 
+    table.append(tr);
 
     $.each(data, function (index, info) {
         var moneyString = info.cost + " kr. (" + info.stikWon + " stik";
-        moneyString += (info.partner && info.partner !== info.better) ? 
+        moneyString += (info.partner && info.partner !== info.better) ?
             " med " + info.partner + ")" : " som selvmakker)";
         var tr = $("<tr></tr>")
             .append("<td>" + (index + 1) + "</td>")
@@ -1089,7 +1107,7 @@ var insertGreatestGame = function (arr, game, gamestats, sessionId, type) {
             insertHere = true;
         }
 
-        if (insertHere) { 
+        if (insertHere) {
             gamestats[type] = arr.slice(0, i).concat([newEntry]).concat(arr.slice(i, 9));
             return;
         }
