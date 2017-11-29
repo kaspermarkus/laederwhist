@@ -377,27 +377,36 @@ var addRadioCellListener = function (selector, clickfn) {
 var submitRound = function () {
     console.log(JSON.stringify(currentRound)); //log to console
     session.games.push(currentRound); //save to session
+    var toPlay = [];
     if (currentRound.results.jonas > 0) {
-        var audio = new Audio('audio/applause.mp3');
-        audio.play();
+        toPlay.push('audio/applause.mp3');
     }
     if (currentRound.results.kasper > 0) {
-        var audio = new Audio('audio/duffman.mp3');
-        audio.play();
+        toPlay.push('audio/duffman.mp3');
     }
     if (currentRound.results.jon > 0) {
-        var audio = new Audio('audio/fanfare.mp3');
-        audio.play();
+        toPlay.push('audio/fanfare.mp3');
     }
     if (currentRound.results.mads > 0) {
-        var audio = new Audio('audio/cat.mp3');
-        audio.play();
+        toPlay.push('audio/cat.mp3');
     }
     if (currentRound.results.lasse > 0) {
-        var audio = new Audio('audio/hallelujah.mp3');
-        audio.play();
+        toPlay.push('audio/hallelujah.mp3');
     }
-
+    var audio = new Audio(toPlay[0]);
+    audio.addEventListener("ended", function() {
+        if (toPlay[1]) {
+            var audio2 = new Audio(toPlay[1]);
+            audio2.addEventListener("ended", function() {
+                if (toPlay[2]) {
+                    var audio3 = new Audio(toPlay[2]);
+                    audio3.play();
+                }
+            });
+            audio2.play();
+        }
+    });
+    audio.play();
 
     //save session name and comments:
     whist.sessions["id"+session.timestamp] = session;
