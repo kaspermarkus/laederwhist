@@ -383,10 +383,10 @@ var submitRound = function () {
         toPlay.push('audio/applause.mp3');
     }
     if (currentRound.results.kasper > 0) {
-        toPlay.push('audio/duffman.mp3');
+        toPlay.push('audio/dracula.mp3');
     }
     if (currentRound.results.jon > 0) {
-        toPlay.push('audio/fanfare.mp3');
+        toPlay.push('audio/tarzan.mp3');
     }
     if (currentRound.results.mads > 0) {
         toPlay.push('audio/cat.mp3');
@@ -394,6 +394,13 @@ var submitRound = function () {
     if (currentRound.results.lasse > 0) {
         toPlay.push('audio/hallelujah.mp3');
     }
+
+    if (currentRound.results["nogen anders"] > 0) {
+        toPlay.push('audio/yodel.mp3');
+    }
+
+
+
     var audio = new Audio(toPlay[0]);
     audio.addEventListener("ended", function() {
         if (toPlay[1]) {
