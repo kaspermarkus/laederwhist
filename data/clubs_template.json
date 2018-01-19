@@ -5,19 +5,23 @@
         "players": {
             "player1": {
                 "nickname": "Ace Ventura",
-                "paid": 0
+                "paid": 0,
+                "color": "darkblue"
             },
             "player2": {
                 "nickname": "The Joker",
-                "paid": 0
+                "paid": 0,
+                "color": "blueviolet"
             },
             "badplayer": {
                 "nickname": "Queen Elisabeth",
-                "paid": 0
+                "paid": 0,
+                "color": "burlywood"
             },
             "lastplayer": {
                 "nickname": "The Jackass",
-                "paid": 0
+                "paid": 0,
+                "color": "brown"
             }
         }
     },
@@ -27,19 +31,23 @@
         "players": {
             "player1": {
                 "nickname": "Noob",
-                "paid": 0
+                "paid": 0,
+                "color": "darkblue"
             },
             "player2": {
                 "nickname": "Newb",
-                "paid": 0
+                "paid": 0,
+                "color": "red"
             },
             "player3": {
                 "nickname": "Bewb",
-                "paid": 0
+                "paid": 0,
+                "color": "green"
             },
             "player4": {
                 "nickname": "Woot?",
-                "paid": 0
+                "paid": 0,
+                "color": "blueviolet"
             }
         }
     }

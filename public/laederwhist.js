@@ -71,6 +71,7 @@ var whist,
     currentRound,
     players,  // initialized via club info
     graphData,
+    megaGraphData,
     skyldePosenPaid,
     costs, // initialized via club info - or using default above
     bet_types; // initialized via club info - or using default above
@@ -310,7 +311,7 @@ var drawPlayerTable = function (tableId, header, type) {
     }
 
     for (var i=0; i<activePlayers.length; i++) {
-        var td = $("<td></td>").addClass(activePlayers[i]).append(activePlayers[i]);
+        var td = $("<td></td>").addClass(activePlayers[i]).append(players[activePlayers[i]].nickname);
         td.click(function (v) {
             var el = $(v.target);
             //clear all fields as unselected and mark new
@@ -515,6 +516,7 @@ var setupUI = function () {
     $("#sessionControlTab").click(showSessionControlScreen);
     $("#statisticsTab").click(showStatisticsScreen);
     $("#skyldeposenTab").click(showSkyldeposenScreen);
+    $("#megaGrafenTab").click(showMegaGrafenScreen);
     showSessionControlScreen();
     updateScoreTable();
     $("#vipTable").css('visibility','hidden');
@@ -554,6 +556,13 @@ var showStatisticsScreen = function () {
     showScreen("statisticsScreen", "statisticsTab");
     updateStatistics(whist);
 };
+
+
+var showMegaGrafenScreen = function () {
+    showScreen("megaGrafenScreen", "megaGrafenTab");
+    updateMegaGraphData(whist);
+    drawMegaGraph(megaGraphData);
+}
 
 var showSkyldeposenScreen = function () {
     updateSkyldeposen();
@@ -627,7 +636,7 @@ var updateScoreTable = function () {
         }
     });
     $.each(sessionPlayers, function (k, v) {
-        headerRow.append("<th>"+v+"</th>");
+        headerRow.append("<th>"+players[v].nickname+"</th>");
         newRow.append("<td></td>");
         firstRow.append("<td>0</td>");
         indices[v]= k+2; // the td-index into the row where the players score is set
@@ -701,7 +710,9 @@ var printScores = function (field, tr, indices, extraClass) {
     var activePlayers = round.activePlayers;
     $.each(activePlayers, function (_, playername) {
         var score = round[field][playername];
+        var roundScoreColor = (round["results"][playername] > 0) ? "winner" : "looser";
         var colorClass = "neutral";
+
         if (score > 0) colorClass = "winner";
         if (score < 0) colorClass = "looser";
 
@@ -709,10 +720,9 @@ var printScores = function (field, tr, indices, extraClass) {
         if (extraClass)
             td.addClass(extraClass);
         //mark with spade symbol the person who did the bet
-        var html = (playername == round.better ? "&spades; " : "&nbsp;&nbsp;&nbsp;");
+        var html = (playername == round.better) ? "<span class=\"" + roundScoreColor + "\">&spades; </span> " : "&nbsp;&nbsp;&nbsp;";
         html += score;
-        html += "&nbsp;&nbsp;&nbsp;<b><span class=\"indicator-dot " + ((round["results"][playername] > 0) ? "winner" : "looser")
-             + "\">&bull;</span></b>";
+        html += "&nbsp;&nbsp;&nbsp;<b><span class=\"indicator-dot " + roundScoreColor + "\">&bull;</span></b>";
 
         td.html(html);
     });
@@ -722,6 +732,9 @@ var printScores = function (field, tr, indices, extraClass) {
 var test = function (a) {
     var roundnr = Math.round(a.x)-1;
     var round = session.games[roundnr];
+    if (roundnr >= session.games.length) {
+        return;
+    }
     var str = "<small><b>Runde "+(roundnr+1)+": "+round.betName+"</b>";
     if (!isNolo(round.type)) {
         str += "<br />Stik vundet: "+round.stikWon+" <font class='"+((round.diff<0)?"looser":"winner")+"'>("+(round.stikWon-round.stik)+")</font>";
@@ -746,7 +759,7 @@ var drawScoreGraph = function (data, min, max) {
     }
     arr.push({ data : [[0,0],[data[playername].length,0]], shadowSize : 0, color : '#545454' }); // Horizontal)
     $.each(data, function (k, v) {
-        arr.push({data: v, label: k, points : { show : true }, lines: { show: true }});
+        arr.push({data: v, label: players[k].nickname, points : { show : true }, lines: { show: true }});
     });
 
     graph = Flotr.draw(container, arr,
@@ -771,6 +784,96 @@ var drawScoreGraph = function (data, min, max) {
             }
         });
 };
+
+/******************************************************
+ * Mega Graph functions
+ */
+
+var updateMegaGraphData = function (whist) {
+    megaGraphData = {
+        labels: [ "Start" ],
+        keyedDatasets: {},
+        datasets: [],
+        roundData: []
+    };
+
+    // create datasets for all players:
+    for (var player in players) {
+        megaGraphData.keyedDatasets[player] = {
+            label: players[player].nickname,
+            data: [ 0 ],
+            borderColor: players[player].color,
+            fill: false,
+            pointRadius: 0
+        };
+    }
+
+    var count = 0;
+
+    for (var sessionid in whist.sessions) {
+        var games = whist.sessions[sessionid].games;
+        for (var gameindex in games) {
+            count++;
+            megaGraphData.labels.push("runde "+count);
+            megaGraphData.roundData.push(games[gameindex]);
+
+            var results = games[gameindex].results;
+            for (var player in players) {
+                var playerData = megaGraphData.keyedDatasets[player].data
+                var lastScore = playerData[playerData.length - 1];
+                if (!results[player]) {
+                    megaGraphData.keyedDatasets[player].data.push(lastScore);
+                } else {
+                    megaGraphData.keyedDatasets[player].data.push(lastScore + results[player]);
+                }
+            }
+        }
+    }
+
+    for (playername in megaGraphData.keyedDatasets) {
+        megaGraphData.datasets.push(megaGraphData.keyedDatasets[playername]);
+    }
+}
+
+var drawMegaGraph = function (megaGraphData) {
+    var ctx = document.getElementById("megaGrafenCanvas").getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: megaGraphData.labels,
+            datasets: megaGraphData.datasets
+        },
+        options: {
+            legend: {
+                labels: {
+                    fontSize: 18,
+                    fontColor: "#DDD",
+                    padding: 20
+                }
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        display: true,
+                        fontSize: 16,
+                        fontColor: "#DDD",
+                        callback: function(label, index, labels) {
+                            return label + " kr.";
+                        }
+                    }
+                }],
+                xAxes: [{
+                    ticks: {
+                        display: true,
+                        fontSize: 14,
+                        fontColor: "#DDD"
+                    }
+                }]
+            }
+        }
+    });
+};
+
 
 
 /******************************************************
