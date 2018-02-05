@@ -92,7 +92,7 @@ var isNolo = function (type) {
 
 var assignScores = function (amount, winners) {
     $.each(currentRound.activePlayers, function (k, v) {
-        if ($.inArray(v, winners) != -1) {
+        if ($.inArray(players[v].nickname, winners) != -1) {
             currentRound.results[v] = (winners.length == 1) ? amount * 3 : amount;
         } else {
             currentRound.results[v] = amount * -1;
@@ -100,11 +100,19 @@ var assignScores = function (amount, winners) {
     });
 };
 
+var isInActivePlayers = function (player, activePlayers) {
+    for (var p in activePlayers) {
+        if (player === players[activePlayers[p]].nickname) {
+            return true;
+        }
+    }
+};
+
 var calculateScores = function () {
     currentRound.results = {};
     //check general requirements:
     if (currentRound.activePlayers.length != 4 ||
-           $.inArray(currentRound.better, currentRound.activePlayers) == -1 ||
+           isInActivePlayers(currentRound.better, currentRound.activePlayers) == false || // $.inArray(currentRound.better, currentRound.activePlayers) == -1 ||
            !currentRound.type ||
            !currentRound.stikCost ||
            (currentRound.type == "vip" && !currentRound.numVip)) {
